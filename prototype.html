@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AU Lunch For 4</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>AU Lunch For 4</header>
+
+        <ul class="nav">
+            <li class="nItem"><a href="prototype.html">Home</a></li>
+            <li class="nItem"><a href="https://aurora.edu/">Aurora University</a></li>
+            <li class="nItem"><a href="prototype2.html">Meeting Feedback</a></li>
+        </ul>
+        
+  
+<table>
+    <form>
+        <th>Fill Out Form Below</th>
+        <tr><td>First Name: <input type="text" id="FName"></td></tr>
+        <tr><td>Last Name: <input type="text" id="LName"></td></tr>
+        <tr><td>ID: <input type="text" id="ID"></td></tr>
+        <tr><td>Email: <input type="email" id="email"></td></tr>
+
+        <tr><td>Role:
+            <select name="role" id="role">
+                <option value="STU">Student</option>
+                <option value="FAC">Faculty</option>
+            </select>
+        </td></tr>
+
+
+        <tr><td>Department:
+            <select name="department" id="department">
+                <option value="MTH">Math</option>
+                <option value="HIS">History</option>
+                <option value="ENG">Engineering</option>
+                <option value="CS">Computer Science</option>
+                <option value="ART">Art</option>
+            </select>
+        </td></tr>
+
+        <tr><td>Active: <br>
+            Y:<input type="radio" id="active" name="status" value="Y" checked>
+            N:<input type="radio" id="inactive" name="status" value="N">
+        </td></tr>
+
+        <tr><td><button type="submit">Submit</button><button type="reset">Reset</button></td></tr>
+        
+    </form>
+</table>
+
+</body>
+</html>
