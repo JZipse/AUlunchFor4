@@ -2,7 +2,6 @@ header{
     font-size: 50px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center;
-
 }
 
 
@@ -35,30 +34,63 @@ button{
     margin: 0px 50px 0px 50px;
 }
 
-ul.nav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.nav {
     overflow: hidden;
-    
+    background-color: #3d424a;
 
 }
-li.nItem { float: left; }
-
-a:link, a:visited {
+.nav a { 
+    float: left;
     display: block;
-    width: 625px;
-    font-weight: bold;
     color: #FFFFFF;
-    background-color: #3d424a;
     text-align: center;
-    padding: 4px;
+    padding: 14px 16px;
     text-decoration: none;
     text-transform: uppercase;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-a:hover, a:active { background-color: #243F8A; }
+
+.nav a:hover{
+    background-color: #243F8A;
+    color:white;
+}
+
+.nav a.active { 
+    background-color: #243F8A; 
+    color: #FFFFFF;
+}
+
+.topnav .icon {
+    display: none;
+}
+
+
+@media screen and (max-width: 600px) {
+    .nav a:not(:first-child) {display: none;}
+    .nav a.icon {
+      float: right;
+      display: block;
+    }
+  }
+  
+  @media screen and (max-width: 600px) {
+    .nav.responsive {position: relative;}
+    .nav.responsive .icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .nav.responsive a {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+  }
+
+
+
+
 
 textarea{
     resize: none;

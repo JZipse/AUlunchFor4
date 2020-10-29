@@ -8,11 +8,25 @@
 <body>
     <header>AU Lunch For 4</header>
 
-        <ul class="nav">
-            <li class="nItem"><a href="prototype.html">Home</a></li>
-            <li class="nItem"><a href="https://aurora.edu/">Aurora University</a></li>
-            <li class="nItem"><a href="prototype2.html">Meeting Feedback</a></li>
-        </ul>
+        <div class="nav" id="topNav">
+            <a href="prototype.html">Home</a>
+            <a href="https://aurora.edu/">Aurora University</a>
+            <a href="prototype2.html">Meeting Feedback</a>
+            <a href="adminProto.html">Admin Login</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+              </a>
+        </div>
+        <script>
+            function myFunction() {
+              var x = document.getElementById("topNav");
+              if (x.className === "nav") {
+                x.className += " responsive";
+              } else {
+                x.className = "nav";
+              }
+            }
+            </script>
         
   
 <table>
