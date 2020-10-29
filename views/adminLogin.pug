@@ -1,0 +1,22 @@
+html
+    head
+        title AULF4
+    body
+        div(class="name" id='topNav')
+            a(href="/form") Home
+            a(href="/feedback") Feedback
+            a(href="https://aurora.edu/") Aurora University
+            a(href="/adminLogin") Administration
+
+
+        h3 AU Lunch For 4
+    form(action='post-test', method='post')
+        div 
+            label(for='user') Username:
+            input(type="text" name='user')
+        div 
+            label(for='pass') Password:
+            input(type="text" name='pass')
+        div 
+            button(type="submit") Submit
+        

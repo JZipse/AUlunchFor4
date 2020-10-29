@@ -1,0 +1,41 @@
+html
+    head
+        title AULF4
+    body
+        div(class="name" id='topNav')
+            a(href="/form") Home
+            a(href="/feedback") Feedback
+            a(href="https://aurora.edu/") Aurora University
+            a(href="/adminLogin") Administration
+
+
+        h3 AU Lunch For 4
+    form(action='post-test', method='post')
+        div 
+            label(for='fName') First Name:
+            input(name='fName' value=" ")
+        div
+            label(for='lName') Last Name:
+            input(name="lName" value=" ")
+        div
+            label(for='ID') ID:
+            input(name='ID' value=" ")
+        div
+            label(for='Email') Email:
+            input(type='email' name='Email' value=" ")
+        div 
+            label(for='Role') Role:
+            select(name='Role' id="role")
+                option(value="STA") Staff
+                option(value="FAC") Faculty
+        div 
+            label(for='Dept') Department:
+            select(name='Dept' id="dept")
+                option(value="MTH") Math
+                option(value="BIO") Biology
+                option(value="CSC") Computer Science
+                option(value="HIS") History
+        div 
+            button(type="submit") Submit
+        div 
+            button(type="reset") Reset Form
