@@ -1,2 +1,7 @@
 # AUlunchFor4
- In class assignment working with a team to build a project for someone else
+For now, the only file that matters is in Back_End.
+
+Enter the Back_End directory and run the server.js file using node
+
+
+
