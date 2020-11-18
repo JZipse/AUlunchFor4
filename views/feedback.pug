@@ -1,20 +1,35 @@
 html
     head
         title AULF4
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        style   
+            include ../CSS/style2.css
     body
-        div(class="name" id='topNav')
-            a(href="/form") Home
-            a(href="/feedback") Feedback
-            a(href="https://aurora.edu/") Aurora University
-            a(href="/adminLogin") Administration
+    div
+        nav(class="navbar navbar-expand-lg navbar-light bg-light")
+            div(class="container-fluid")
+                div(class="navbar-header")
+                    ul(class="nav navbar-nav")
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/form") Home
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/feedback") Feedback
+                        li(class = "nav-item")
+                            a(class="nav-link" href="https://aurora.edu/") Aurora University
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/adminLogin") Administration
 
 
-        h3 AU Lunch For 4
+        h1 AU Lunch For 4
     form(action='post-test', method='post')
-        div 
-            label(for='feedback') Feedback:
-            textarea(name="feedback" value="Please Provide Feedback")
-        div 
-            button(type="submit") Submit
-        div 
-            button(type="reset") Reset Form
+        .row
+            .col 
+                label(for='feedback') Feedback:
+        .row
+            .col
+                textarea(name="feedback" value="Please Provide Feedback")
+        .row
+            .col-2
+                button(type="submit" class="btn btn-primary") Submit
+            .col-2
+                button(type="reset" class="btn btn-primary") Reset Form

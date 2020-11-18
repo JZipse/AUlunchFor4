@@ -1,0 +1,26 @@
+body {
+    background-color: gray;
+}
+
+div {
+    background-color: rgb(11, 179, 11);
+}
+
+h1 {
+    background-color: rgb(11, 179, 11);
+    display: block;
+    padding: 10px 10px 10px 10px;
+}
+
+a {
+    padding: 10px 10px 10px 10px;
+}
+
+span {
+    padding: 10px 10px 10px 10px;
+}
+
+.row {
+    background-color: rgb(11, 179, 11);
+    padding: 10px 10px 10px 10px;
+}
