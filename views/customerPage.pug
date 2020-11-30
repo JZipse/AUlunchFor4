@@ -1,0 +1,30 @@
+html
+    head
+        title Customer Page
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        style   
+            include ../CSS/style2.css
+    body
+    div
+        nav(class="navbar navbar-expand-lg navbar-light bg-light")
+            div(class="container-fluid")
+                div(class="navbar-header")
+                    ul(class="nav navbar-nav")
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/form") Home
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/feedback") Feedback
+                        li(class = "nav-item")
+                            a(class="nav-link" href="https://aurora.edu/") Aurora University
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/adminLogin") Administration
+        h1 Customer Page:
+        .row
+            .col
+                button(type="button" class="btn btn-primary" onclick="window.location.href='/'") Update My Account
+            .col
+                button(type="button" class="btn btn-primary" onclick="window.location.href='/customer/delete'") Delete My Account
+            .col
+                button(type="button" class="btn btn-primary" onclick="window.location.href='/inactiveToggle'") List Me As Inactive
+            .col
+                button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting

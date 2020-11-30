@@ -26,7 +26,7 @@ app.get('/form', (req, res) =>{
 });
 
 app.post('/customerPage', (req, res) =>{
-    res.render('feedback');
+    res.render('customerPage');
 });
 
 app.post('/formaction', (req,res) =>{
@@ -56,7 +56,7 @@ app.post('/form/delete/action', (req,res) => {
     res.redirect('/adminPage')
 })
 
-app.post('/feedback', (req, res) =>{
+app.get('/feedback', (req, res) =>{
     res.render('feedback');
 });
 
@@ -108,7 +108,7 @@ app.post('/customerLogin', (req, res) => {
             }
         }
         if(id !== null){
-            res.render('feedback',{'ID': id})
+            res.render('customerPage',{'ID': id})
         }else{
             res.send('Wrong user login credentials')
         }
