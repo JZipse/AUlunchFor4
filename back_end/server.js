@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const { isNull } = require('util');
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -22,6 +23,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/form', (req, res) =>{
     res.render('form');
+});
+
+app.post('/customerPage', (req, res) =>{
+    res.render('feedback');
 });
 
 app.post('/formaction', (req,res) =>{
@@ -51,7 +56,7 @@ app.post('/form/delete/action', (req,res) => {
     res.redirect('/adminPage')
 })
 
-app.get('/feedback', (req, res) =>{
+app.post('/feedback', (req, res) =>{
     res.render('feedback');
 });
 
@@ -76,23 +81,38 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.post('/adminLogin', (req, res) => {
    //console.log('Got Body:', req.body);
+ 
+    const adminUser = "user";
+    const adminPass = "pass";
+    if (req.body.user == adminUser && req.body.pass == adminPass){
+        res.redirect('/adminPage');
+    }else{
+        res.send("Wrong Username or Passord for Admin");
+    }
+});
+
+app.post('/customerLogin', (req, res) => {
     con.query('SELECT * FROM users', (err,rows) => {
+        var id
         if(err) throw err;
-  
+    
         console.log('Data received from Db:');
         console.log(rows);
-
-        const user = "user";
-        const pass = "pass";
-        if (req.body.user == user && req.body.pass == pass){
-            res.send("logging in");
-        }else{
-            res.send("wrong Username or Passord");
-        }
     
+        for(let i = 0; i < (rows.length); i++){
+            let user = rows[i].email;
+            let pass = rows[i].password;
+            if(req.body.user == user && req.body.pass == pass){
+                id = rows[i].internalID
+                break;
+            }
+        }
+        if(id !== null){
+            res.render('feedback',{'ID': id})
+        }else{
+            res.send('Wrong user login credentials')
+        }
     });
-   
-   
 });
 
 
