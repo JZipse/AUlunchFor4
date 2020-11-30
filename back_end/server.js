@@ -18,12 +18,17 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', '../views');
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/form', (req, res) =>{
     res.render('form');
 });
 
 app.post('/formaction', (req,res) =>{
+    console.log('Got body:', req.body)
+    var str = "INSERT INTO `aulunch`.`users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `role`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + req.body.password + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
+    console.log(str);
+    con.query(str);
     res.redirect('adminPage')
 })
 
