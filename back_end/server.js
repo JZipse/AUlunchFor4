@@ -60,7 +60,8 @@ app.post('/feedback/Insert', (req, res) => {
 });
 
 app.get('/GenerateMeetings',(req, res) => {
-    
+    console.log('Got body:', req.body)
+    res.send('Generate Meetings Page')
 });
 
 app.get('/adminLogin', (req, res) => {
@@ -75,11 +76,20 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.post('/adminLogin', (req, res) => {
    //console.log('Got Body:', req.body);
-   const user = "user";
-   const pass = "pass";
-   if (req.body.user == user && req.body.pass == pass){
-       res.send("logging in");
-   }
+    con.query('SELECT * FROM users', (err,rows) => {
+        if(err) throw err;
+  
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        const user = "user";
+        const pass = "pass";
+        if (req.body.user == user && req.body.pass == pass){
+            res.send("logging in");
+        }
+    
+    });
+   
    
 });
 
