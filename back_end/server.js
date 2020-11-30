@@ -48,6 +48,14 @@ app.get('/form/delete', (req, res) => {
     });
 })
 
+app.post('/customer/delete', (req,res) => {
+    console.log('Got body:', req.body)
+    var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
+    console.log(str);
+    con.query(str);
+    res.redirect('/adminLogin')
+})
+
 app.post('/form/delete/action', (req,res) => {
     console.log('Got body:', req.body)
     var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
@@ -108,7 +116,7 @@ app.post('/customerLogin', (req, res) => {
             }
         }
         if(id !== null){
-            res.render('customerPage',{'ID': id})
+            res.render('customerPage', {'ID': id})
         }else{
             res.send('Wrong user login credentials')
         }

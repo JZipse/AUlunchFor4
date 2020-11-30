@@ -17,6 +17,14 @@ a {
     padding: 10px 10px 10px 10px;
 }
 
+th {
+    background-color: white;
+}
+
+td {
+    background-color: white;
+}
+
 span {
     padding: 10px 10px 10px 10px;
 }

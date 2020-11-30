@@ -19,12 +19,20 @@ html
                         li(class = "nav-item")
                             a(class="nav-link" href="/adminLogin") Administration
         h1 Customer Page:
-        .row
-            .col
-                button(type="button" class="btn btn-primary" onclick="window.location.href='/'") Update My Account
-            .col
-                button(type="button" class="btn btn-primary" onclick="window.location.href='/customer/delete'") Delete My Account
-            .col
-                button(type="button" class="btn btn-primary" onclick="window.location.href='/inactiveToggle'") List Me As Inactive
-            .col
-                button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
+        form(method='post')
+            .row
+                .col
+                    button(name='ID' type="submit" class="btn btn-primary" value=ID fomraction="/customer/update'") Update My Account
+                .col
+                    button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/inactiveToggle") List Me As Inactive/Active
+                .col
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
+                .col
+                    button(name='ID' type="submit" class="btn btn-primary" value=ID  onclick="/meetingHistory") View My Meeting History
+            .row
+                .col
+            .row
+                .col
+            .row
+                .col
+                    button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete My Account (does it need a confirmation page?)
