@@ -21,12 +21,10 @@ app.set('views', '../views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+// admin functionality begins here
 app.get('/form', (req, res) =>{
     res.render('form');
-});
-
-app.post('/customerPage', (req, res) =>{
-    res.render('customerPage');
 });
 
 app.post('/formaction', (req,res) =>{
@@ -48,14 +46,6 @@ app.get('/form/delete', (req, res) => {
     });
 })
 
-app.post('/customer/delete', (req,res) => {
-    console.log('Got body:', req.body)
-    var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/adminLogin')
-})
-
 app.post('/form/delete/action', (req,res) => {
     console.log('Got body:', req.body)
     var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
@@ -63,14 +53,6 @@ app.post('/form/delete/action', (req,res) => {
     con.query(str);
     res.redirect('/adminPage')
 })
-
-app.get('/feedback', (req, res) =>{
-    res.render('feedback');
-});
-
-app.post('/feedback/Insert', (req, res) => {
-    console.log('Got body:', req.body)
-});
 
 app.get('/GenerateMeetings',(req, res) => {
     console.log('Got body:', req.body)
@@ -85,8 +67,6 @@ app.get('/adminPage', (req, res) => {
     res.render('adminPage');
 });
 
-app.use(bodyParser.urlencoded({extended:true}));
-
 app.post('/adminLogin', (req, res) => {
    //console.log('Got Body:', req.body);
  
@@ -99,6 +79,9 @@ app.post('/adminLogin', (req, res) => {
     }
 });
 
+
+
+// Customer functionality begins here.
 app.post('/customerLogin', (req, res) => {
     con.query('SELECT * FROM users', (err,rows) => {
         var id
@@ -123,5 +106,24 @@ app.post('/customerLogin', (req, res) => {
     });
 });
 
+app.post('/customer/delete', (req,res) => {
+    console.log('Got body:', req.body)
+    var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
+    console.log(str);
+    con.query(str);
+    res.redirect('/adminLogin')
+})
+
+app.get('/feedback', (req, res) =>{
+    res.render('feedback');
+});
+
+app.post('/feedback/Insert', (req, res) => {
+    console.log('Got body:', req.body)
+});
+
+app.post('/customerPage', (req, res) =>{
+    res.render('customerPage');
+});
 
 app.listen(3000);
