@@ -36,7 +36,7 @@ app.get('/feedback', (req, res) =>{
     res.render('feedback');
 });
 
-app.get('/GenerateMeeting',(req, res) => {
+app.get('/GenerateMeetings',(req, res) => {
     
 });
 
