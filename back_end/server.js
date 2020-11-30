@@ -86,6 +86,8 @@ app.post('/adminLogin', (req, res) => {
         const pass = "pass";
         if (req.body.user == user && req.body.pass == pass){
             res.send("logging in");
+        }else{
+            res.send("wrong Username or Passord");
         }
     
     });
