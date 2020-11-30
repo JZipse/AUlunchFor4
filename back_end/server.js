@@ -36,6 +36,10 @@ app.get('/feedback', (req, res) =>{
     res.render('feedback');
 });
 
+app.post('/feedback/Insert', (req, res) => {
+    console.log('Got body:', req.body)
+});
+
 app.get('/GenerateMeetings',(req, res) => {
     
 });
