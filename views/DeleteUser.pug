@@ -1,0 +1,56 @@
+html
+    head
+        title AULF4
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        style   
+            include ../CSS/style2.css
+    body
+    div
+        nav(class="navbar navbar-expand-lg navbar-light bg-light")
+            div(class="container-fluid")
+                div(class="navbar-header")
+                    ul(class="nav navbar-nav")
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/form") Home
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/feedback") Feedback
+                        li(class = "nav-item")
+                            a(class="nav-link" href="https://aurora.edu/") Aurora University
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/adminLogin") Administration
+        h1 AU Lunch For 4
+            .row 
+                .col
+                    table(style='width:90%', border='1')
+                        tr
+                            th First Name
+                            th last Name
+                            th School ID
+                            th Internal ID
+                            th Email
+                            th Role
+                            th Department
+                        for use in users
+                            tr
+                                td #{use.firstName}
+                                td #{use.lastName}
+                                td #{use.schoolID}
+                                td #{use.internalID}
+                                td #{use.email}
+                                td #{use.role}
+                                td #{use.department}
+                            
+        form(method="post" action="/form/delete/action")
+            .row
+                .col-2
+                    label Select User ID:
+            .row
+                .col
+                    select(name='ID', id='item')
+                        for use in users
+                            option(name="select" value=use.internalID ) #{use.schoolID}
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/form/delete/action") Delete Selected User
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back

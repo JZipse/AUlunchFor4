@@ -29,7 +29,26 @@ app.post('/formaction', (req,res) =>{
     var str = "INSERT INTO `aulunch`.`users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `role`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + req.body.password + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
     console.log(str);
     con.query(str);
-    res.redirect('adminPage')
+    res.redirect('/adminPage')
+})
+
+app.get('/form/delete', (req, res) => {
+    con.query('SELECT * FROM users', (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('DeleteUser', {"users": rows});
+    });
+})
+
+app.post('/form/delete/action', (req,res) => {
+    console.log('Got body:', req.body)
+    var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
+    console.log(str);
+    con.query(str);
+    res.redirect('/adminPage')
 })
 
 app.get('/feedback', (req, res) =>{
