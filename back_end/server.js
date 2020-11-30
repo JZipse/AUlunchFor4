@@ -1,5 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const sql = require('mysql');
+
+
+const conn = sql.createConnection({
+    host: "45.55.136.114",
+    user:"lunch44F2020",
+    password: "luncht1me",
+    database: "lunch44F2020"
+});
+
+conn.connect(function(err){
+    if(err) throw err;
+    console.log("CONNECTED TO DB");
+})
+
 
 const app = express();
 app.set('view engine', 'pug');
