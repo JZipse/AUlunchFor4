@@ -1,5 +1,6 @@
 body {
     background-color: gray;
+    margin: 10px 10px 10px 10px;
 }
 
 div {
@@ -14,6 +15,14 @@ h1 {
 
 a {
     padding: 10px 10px 10px 10px;
+}
+
+th {
+    background-color: white;
+}
+
+td {
+    background-color: white;
 }
 
 span {

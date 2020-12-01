@@ -1,0 +1,72 @@
+html
+    head
+        title AULF4
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        style   
+            include ../CSS/style2.css
+    body
+    div
+        nav(class="navbar navbar-expand-lg navbar-light bg-light")
+            div(class="container-fluid")
+                div(class="navbar-header")
+                    ul(class="nav navbar-nav")
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/form") Home
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/feedback") Feedback
+                        li(class = "nav-item")
+                            a(class="nav-link" href="https://aurora.edu/") Aurora University
+                        li(class = "nav-item")
+                            a(class="nav-link" href="/adminLogin") Administration
+
+
+        h1 AU Lunch For 4
+        form(action='/customer/update/action', method='post')
+            .row
+                .col-2
+                    label(for='fName') First Name:
+                .col-2
+                    input(name='fName' value=data[0].firstName)
+            .row
+                .col-2
+                    label(for='lName') Last Name:
+                .col-2
+                    input(name="lName" value=data[0].lastName)
+            .row
+                .col-2
+                    label(for='schoolID') ID:
+                .col-2
+                    input(name='schoolID' value=data[0].schoolID)
+            .row
+                .col-2
+                    label(for='Email') Email:
+                .col-2
+                    input(type='email' name='Email' value=data[0].email)
+            .row
+                .col-2
+                    label(for='Password') Password:
+                .col-2
+                    input(type='password' name='password' value=data[0].password)
+            .row
+                .col-2 
+                    label(for='Role') Role:
+                .col-2
+                    select(name='Role' id="role" value=data[0].role)
+                        option(value="STA") Staff
+                        option(value="FAC") Faculty
+            .row
+                .col-2 
+                    label(for='Dept') Department:
+                .col-2
+                    select(name='Dept' id="dept" value=data[0].department)
+                        option(value="MTH") Math
+                        option(value="BIO") Biology
+                        option(value="CSC") Computer Science
+                        option(value="HIS") History
+            .row
+                .col-2 
+                    button(name="ID" type="submit" class="btn btn-primary" value=data[0].internalID) Submit
+                .col-2
+                    button(type="reset" class="btn btn-primary") Reset Form
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
