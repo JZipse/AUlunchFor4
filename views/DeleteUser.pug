@@ -19,9 +19,10 @@ html
                         li(class = "nav-item")
                             a(class="nav-link" href="/adminLogin") Administration
         h1 AU Lunch For 4
+        .container
             .row 
                 .col
-                    table(style='width:90%', border='1')
+                    table(style='width:90%', border='1', class="table center")
                         tr
                             th First Name
                             th last Name
@@ -41,6 +42,7 @@ html
                                 td #{use.department}
                             
         form(method="post" action="/form/delete/action")
+        .container
             .row
                 .col-2
                     label Select User ID:

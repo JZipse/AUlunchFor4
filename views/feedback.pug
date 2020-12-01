@@ -19,17 +19,17 @@ html
                         li(class = "nav-item")
                             a(class="nav-link" href="/adminLogin") Administration
 
-
         h1 AU Lunch For 4
-    form(action='post-test', method='post')
-        .row
-            .col 
-                label(for='feedback') Feedback:
-        .row
-            .col
-                textarea(name="feedback" value="Please Provide Feedback")
-        .row
-            .col-2
-                button(type="submit" class="btn btn-primary") Submit
-            .col-2
-                button(type="reset" class="btn btn-primary") Reset Form
+        .container
+            form(action='post-test', method='post')
+                .row
+                    .col 
+                        label(for='feedback') Feedback:
+                .row
+                    .col
+                        textarea(name="feedback" value="Please Provide Feedback")
+                .row
+                    .col-2
+                        button(type="submit" class="btn btn-primary") Submit
+                    .col-2
+                        button(type="reset" class="btn btn-primary") Reset Form

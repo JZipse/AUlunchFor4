@@ -20,9 +20,10 @@ html
                             a(class="nav-link" href="/adminLogin") Administration
 
         h1 AU Lunch For 4
-        .row 
+        .container
+            .row 
                 .col
-                    table(style='width:90%', border='1')
+                    table(style='width:90%', border='1', class="table center")
                         tr
                             th Meeting Date
                             th Meeting ID
@@ -31,6 +32,6 @@ html
                             th member3
                             th member4
                             th member5
-        .row
-            .col-2
-                button(type="button" class="btn btn-primary" onclick="history.back()") Back
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
