@@ -12,8 +12,8 @@ html
             form(action='adminLogin', method='post')
                 .row
                     .col-2
-                    if messages.error
-                        p #{messages.error}
+                        if messages.error
+                            p #{messages.error}
                         label(for='user') Username:
                     .col-2
                         input(type="text" name='user')
@@ -21,7 +21,7 @@ html
                     .col-2
                         label(for='pass') Password:
                     .col-2
-                        input(type="text" name='pass')
+                        input(type="password" name='pass')
                 .row
                     .col-2
                         button(type="submit" class="btn btn-primary" formaction='/adminLogin') Admin Login
