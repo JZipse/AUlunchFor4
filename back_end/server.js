@@ -4,10 +4,10 @@ const mysql = require('mysql');
 const { isNull } = require('util');
 
 const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Base2018",
-    database: "aulunch"
+    host: "45.55.136.114",
+    user: "lunch44F2020",
+    password: "luncht1me",
+    database: "lunch44F2020"
 });
 
 +con.connect(function(err) {
@@ -29,7 +29,7 @@ app.get('/form', (req, res) =>{
 
 app.post('/formaction', (req,res) =>{
     console.log('Got body:', req.body)
-    var str = "INSERT INTO `aulunch`.`users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `role`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + req.body.password + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
+    var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `role`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + req.body.password + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
     console.log(str);
     con.query(str);
     res.redirect('/adminPage')
@@ -38,6 +38,8 @@ app.post('/formaction', (req,res) =>{
 app.get('/form/delete', (req, res) => {
     con.query('SELECT * FROM users', (err,rows) => {
         if(err) throw err;
+
+        console.log(rows.password);
       
         console.log('Data received from Db:');
         console.log(rows);
@@ -48,7 +50,7 @@ app.get('/form/delete', (req, res) => {
 
 app.post('/form/delete/action', (req,res) => {
     console.log('Got body:', req.body)
-    var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
+    var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
     console.log(str);
     con.query(str);
     res.redirect('/adminPage')
@@ -108,7 +110,7 @@ app.post('/customerLogin', (req, res) => {
 
 app.post('/customer/delete', (req,res) => {
     console.log('Got body:', req.body)
-    var str = "DELETE FROM `aulunch`.`users` WHERE (`internalID` = '" + req.body.ID + "')";
+    var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
     console.log(str);
     con.query(str);
     res.redirect('/adminLogin')
@@ -125,7 +127,7 @@ app.post('/customer/update', (req,res) =>{
 
 app.post('/customer/update/action', (req,res) =>{
     console.log('Got body:', req.body)
-    var str = "UPDATE `aulunch`.`users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `email` = '" + req.body.Email + "', `password` = '" + req.body.password + "', `role` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
+    var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `email` = '" + req.body.Email + "', `password` = '" + req.body.password + "', `role` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
     con.query(str);
     res.send("updated");
 
