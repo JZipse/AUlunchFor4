@@ -21,51 +21,51 @@ html
 
 
         h1 AU Lunch For 4
-        form(action='/formaction/update', method='post')
+        form(action='/customer/update/action', method='post')
             .row
                 .col-2
                     label(for='fName') First Name:
                 .col-2
-                    input(name='fName' value=)
+                    input(name='fName' value=data[0].firstName)
             .row
                 .col-2
                     label(for='lName') Last Name:
                 .col-2
-                    input(name="lName" value=)
+                    input(name="lName" value=data[0].lastName)
             .row
                 .col-2
-                    label(for='ID') ID:
+                    label(for='schoolID') ID:
                 .col-2
-                    input(name='ID' value=)
+                    input(name='schoolID' value=data[0].schoolID)
             .row
                 .col-2
                     label(for='Email') Email:
                 .col-2
-                    input(type='email' name='Email' value=)
+                    input(type='email' name='Email' value=data[0].email)
             .row
                 .col-2
                     label(for='Password') Password:
                 .col-2
-                    input(type='password' name='password' value="")
+                    input(type='password' name='password' value=data[0].password)
             .row
                 .col-2 
                     label(for='Role') Role:
                 .col-2
-                    select(name='Role' id="role")
+                    select(name='Role' id="role" value=data[0].role)
                         option(value="STA") Staff
                         option(value="FAC") Faculty
             .row
                 .col-2 
                     label(for='Dept') Department:
                 .col-2
-                    select(name='Dept' id="dept")
+                    select(name='Dept' id="dept" value=data[0].department)
                         option(value="MTH") Math
                         option(value="BIO") Biology
                         option(value="CSC") Computer Science
                         option(value="HIS") History
             .row
                 .col-2 
-                    button(type="submit" class="btn btn-primary") Submit
+                    button(name="ID" type="submit" class="btn btn-primary" value=data[0].internalID) Submit
                 .col-2
                     button(type="reset" class="btn btn-primary") Reset Form
                 .col-2

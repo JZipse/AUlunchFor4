@@ -114,6 +114,23 @@ app.post('/customer/delete', (req,res) => {
     res.redirect('/adminLogin')
 })
 
+app.post('/customer/update', (req,res) =>{
+    console.log('Got body:', req.body)
+    con.query('SELECT * FROM users WHERE internalID = ' + req.body.ID, (err,rows) => {
+        console.log('Data received from Db:');
+        console.log(rows);
+        res.render('customerUpdate', {"data": rows})
+    })
+})
+
+app.post('/customer/update/action', (req,res) =>{
+    console.log('Got body:', req.body)
+    var str = "UPDATE `aulunch`.`users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `email` = '" + req.body.Email + "', `password` = '" + req.body.password + "', `role` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
+    con.query(str);
+    res.send("updated");
+
+})
+
 app.get('/feedback', (req, res) =>{
     res.render('feedback');
 });
