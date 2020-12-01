@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const bcrypt = require('bcrypt');
 const { isNull } = require('util');
 
 const con = mysql.createConnection({
@@ -27,9 +28,12 @@ app.get('/form', (req, res) =>{
     res.render('form');
 });
 
-app.post('/formaction', (req,res) =>{
+app.post('/formaction', async (req,res) =>{
+    
     console.log('Got body:', req.body)
-    var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `role`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + req.body.password + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `role`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
     console.log(str);
     con.query(str);
     res.redirect('/adminPage')
@@ -84,27 +88,32 @@ app.post('/adminLogin', (req, res) => {
 
 
 // Customer functionality begins here.
-app.post('/customerLogin', (req, res) => {
-    con.query('SELECT * FROM users', (err,rows) => {
-        var id
+app.post('/customerLogin', async (req, res) => {
+    con.query('SELECT EMAIL, PASSWORD FROM users', (err,rows) => {
+        console.log(req.body.pass)
+        let customers = [];
         if(err) throw err;
-    
         console.log('Data received from Db:');
-        console.log(rows);
-    
+        //console.log(rows);
         for(let i = 0; i < (rows.length); i++){
-            let user = rows[i].email;
-            let pass = rows[i].password;
-            if(req.body.user == user && req.body.pass == pass){
-                id = rows[i].internalID
-                break;
+            const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD}
+            console.log(user);
+            customers.push(user); 
+        }
+        const cusLog = customers.find(email => email.email = req.body.user)
+        if(cusLog == null){
+            console.log('No account with that email')
+        }
+        try {
+            if(bcrypt.compare(req.body.pass, cusLog.password)){
+                res.render('customerPage')
+            } else {
+                res.send('Failed');
             }
+        } catch {
+            res.status(500).send();
         }
-        if(id !== null){
-            res.render('customerPage', {'ID': id})
-        }else{
-            res.send('Wrong user login credentials')
-        }
+
     });
 });
 
