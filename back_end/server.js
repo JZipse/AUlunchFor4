@@ -10,7 +10,7 @@ const con = mysql.createConnection({
     database: "lunch44F2020"
 });
 
-+con.connect(function(err) {
+con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
 });
