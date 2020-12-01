@@ -6,22 +6,19 @@ html
             include ../CSS/style2.css
     body
     div
-        nav(class="navbar navbar-expand-lg navbar-light bg-light")
+        nav(class="navbar navbar-expand navbar-light bg-light")
             div(class="container-fluid")
                 div(class="navbar-header")
                     ul(class="nav navbar-nav")
                         li(class = "nav-item")
-                            a(class="nav-link" href="/form") Home
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/feedback") Feedback
+                            a(class="nav-link" href="/adminPage") Home Admin
                         li(class = "nav-item")
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/adminLogin") Administration
         h1 AU Lunch For 4
+        .container
             .row 
                 .col
-                    table(style='width:90%', border='1')
+                    table(style='width:90%', border='1', class="table center")
                         tr
                             th First Name
                             th last Name
@@ -37,10 +34,11 @@ html
                                 td #{use.schoolID}
                                 td #{use.internalID}
                                 td #{use.email}
-                                td #{use.role}
+                                td #{use.staffRole}
                                 td #{use.department}
                             
         form(method="post" action="/form/delete/action")
+        .container
             .row
                 .col-2
                     label Select User ID:

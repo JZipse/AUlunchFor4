@@ -6,39 +6,27 @@ html
             include ../CSS/style2.css
     body
     div
-        nav(class="navbar navbar-expand-lg navbar-light bg-light")
-            div(class="container-fluid")
-                div(class="navbar-header")
-                    ul(class="nav navbar-nav")
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/form") Home
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/feedback") Feedback
-                        li(class = "nav-item")
-                            a(class="nav-link" href="https://aurora.edu/") Aurora University
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/adminLogin") Administration
 
         h1 AU Lunch For 4
-        if messages.error
-                    p #{messages.error}
-    form(action='adminLogin', method='post')
-        .row
-            .col-2
-            
-                label(for='user') Username:
-            .col-2
-                input(type="text" name='user')
-        .row
-            .col-2
-                label(for='pass') Password:
-            .col-2
-                input(type="password" name='pass')
-        .row
-            .col-2
-                button(type="submit" class="btn btn-primary" formaction='/adminLogin') Admin Login
-            .col-2
-                button(type="submit" class="btn btn-primary" formaction='/customerLogin') Customer Login
-            .col-2
-                button(type="button" class="btn btn-primary" onclick="window.location.href='/form'") Sign Up New User
+        .container
+            form(action='adminLogin', method='post')
+                .row
+                    .col-2
+                    if messages.error
+                        p #{messages.error}
+                        label(for='user') Username:
+                    .col-2
+                        input(type="text" name='user')
+                .row
+                    .col-2
+                        label(for='pass') Password:
+                    .col-2
+                        input(type="text" name='pass')
+                .row
+                    .col-2
+                        button(type="submit" class="btn btn-primary" formaction='/adminLogin') Admin Login
+                    .col-2
+                        button(type="submit" class="btn btn-primary" formaction='/customerLogin') Customer Login
+                    .col-2
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/form'") Sign Up New User
         

@@ -87,6 +87,10 @@ app.post('/form/delete/action', (req,res) => {
     res.redirect('/adminPage')
 })
 
+app.get('/reports', checkAuthenticated, (req,res) => {
+    res.render('Reports')
+})
+
 app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
     console.log('Got body:', req.body)
     res.send('Generate Meetings Page')

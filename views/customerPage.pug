@@ -6,20 +6,17 @@ html
             include ../CSS/style2.css
     body
     div
-        nav(class="navbar navbar-expand-lg navbar-light bg-light")
+        nav(class="navbar navbar-expand navbar-light bg-light")
             div(class="container-fluid")
                 div(class="navbar-header")
                     ul(class="nav navbar-nav")
                         li(class = "nav-item")
-                            a(class="nav-link" href="/form") Home
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/feedback") Feedback
+                            a(class="nav-link" href="/customerPage") Home
                         li(class = "nav-item")
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
-                        li(class = "nav-item")
-                            a(class="nav-link" href="/adminLogin") Administration
         h1 Customer Page:
         form(method='post')
+        .container
             .row
                 .col
                     button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/update") Update My Account
@@ -36,3 +33,5 @@ html
             .row
                 .col
                     button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete My Account (does it need a confirmation page?)
+                .col
+                    button(type="submit" class="btn btn-primary" onclick="window.location.href='/logout'") Delete My Account (does it need a confirmation page?)
