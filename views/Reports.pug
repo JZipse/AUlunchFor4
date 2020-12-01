@@ -18,14 +18,19 @@ html
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
                         li(class = "nav-item")
                             a(class="nav-link" href="/adminLogin") Administration
-        h1 AU Lunch For 4
-    .row
-        .col
-            button(type="button" class="btn btn-primary" onclick="window.location.href='/form'") Sign Up New User
-        .col
-            button(type="button" class="btn btn-primary" onclick="window.location.href='/form/delete'") Delete Prior User
-        .col
-            button(type="button" class="btn btn-primary" onclick="window.location.href='/generateMeetings'") Make groups and send Emails
-        .col
-            button(type="button" class="btn btn-primary" onclick="window.location.href='/reports'") Activity Report
 
+        h1 AU Lunch For 4
+        .row 
+                .col
+                    table(style='width:90%', border='1')
+                        tr
+                            th Meeting Date
+                            th Meeting ID
+                            th member1
+                            th member2
+                            th member3
+                            th member4
+                            th member5
+        .row
+            .col-2
+                button(type="button" class="btn btn-primary" onclick="history.back()") Back
