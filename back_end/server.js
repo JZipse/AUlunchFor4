@@ -9,6 +9,8 @@ const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session');
 const initializePassport = require('./passport-config');
+const methodOverride = require('method-override')
+
 
 initializePassport(
      passport, 
@@ -44,9 +46,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-
-
-
+app.use(methodOverride('_method'))
 
 
 
@@ -96,7 +96,7 @@ app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
     res.send('Generate Meetings Page')
 });
 
-app.get('/adminLogin', (req, res) => {
+app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
     res.render('adminLogin');
     con.query('SELECT internalID, EMAIL, PASSWORD FROM users', (err,rows) => {
         
@@ -112,7 +112,7 @@ app.get('/adminLogin', (req, res) => {
     });
 });
 
-app.get('/adminPage', checkAuthenticated, (req, res) => {
+app.get('/adminPage', (req, res) => {
     res.render('adminPage');
     
 });
@@ -131,8 +131,6 @@ app.post('/adminLogin', (req, res) => {
 
 
 // Customer functionality begins here.
-
-
 app.post('/customerLogin', passport.authenticate('local', {
     successRedirect: '/customerPage',
     failureRedirect: '/adminLogin',
@@ -176,11 +174,23 @@ app.get('/customerPage', checkAuthenticated, (req, res) =>{
     res.render('customerPage');
 });
 
+app.delete('/logout', (req, res) => {
+    req.logOut()
+    res.redirect('/adminLogin');
+});
+
 function checkAuthenticated(req, res, next){
     if (req.isAuthenticated()){
         return next();
     }
-    res.redirect('adminLogin')
+    res.redirect('/adminLogin')
+}
+
+function checkNotAuthenticated(req, res, next){
+    if (req.isAuthenticated()){
+        return res.redirect('/customerPage')
+    }
+    next()
 }
 
 app.listen(3000);

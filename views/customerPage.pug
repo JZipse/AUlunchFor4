@@ -34,4 +34,5 @@ html
                 .col
                     button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete My Account (does it need a confirmation page?)
                 .col
-                    button(type="submit" class="btn btn-primary" onclick="window.location.href='/logout'") Delete My Account (does it need a confirmation page?)
+        form(action='/logout?_method=DELETE' method="POST")
+             button(type="submit" class="btn btn-primary" formaction='/logout?_method=DELETE') Log Out
