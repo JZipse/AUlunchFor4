@@ -8,53 +8,54 @@ html
     div
     
         h1 AU Lunch For 4
-        .container
-        form(action='formaction', method='post')
-            .row
-                .col-2
-                    label(for='fName') First Name:
-                .col-2
-                    input(name='fName' value="")
-            .row
-                .col-2
-                    label(for='lName') Last Name:
-                .col-2
-                    input(name="lName" value="")
-            .row
-                .col-2
-                    label(for='ID') ID:
-                .col-2
-                    input(name='ID' value="")
-            .row
-                .col-2
-                    label(for='Email') Email:
-                .col-2
-                    input(type='email' name='Email' value="")
-            .row
-                .col-2
-                    label(for='Password') Password:
-                .col-2
-                    input(type='password' name='password' value="")
-            .row
-                .col-2 
-                    label(for='Role') Role:
-                .col-2
-                    select(name='Role' id="role")
-                        option(value="STA") Staff
-                        option(value="FAC") Faculty
-            .row
-                .col-2 
-                    label(for='Dept') Department:
-                .col-2
-                    select(name='Dept' id="dept")
-                        option(value="MTH") Math
-                        option(value="BIO") Biology
-                        option(value="CSC") Computer Science
-                        option(value="HIS") History
-            .row
-                .col-2 
-                    button(type="submit" class="btn btn-primary") Submit
-                .col-2
-                    button(type="reset" class="btn btn-primary") Reset Form
-                .col-2
-                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
+        
+        form(action='/formaction', method='post')
+            .container
+                .row
+                    .col-2
+                        label(for='fName') First Name:
+                    .col-2
+                        input(name='fName' value="")
+                .row
+                    .col-2
+                        label(for='lName') Last Name:
+                    .col-2
+                        input(name="lName" value="")
+                .row
+                    .col-2
+                        label(for='ID') ID:
+                    .col-2
+                        input(name='ID' value="")
+                .row
+                    .col-2
+                        label(for='Email') Email:
+                    .col-2
+                        input(type='email' name='Email' value="")
+                .row
+                    .col-2
+                        label(for='Password') Password:
+                    .col-2
+                        input(type='password' name='password' value="")
+                .row
+                    .col-2 
+                        label(for='Role') Role:
+                    .col-2
+                        select(name='Role' id="role")
+                            option(value="STA") Staff
+                            option(value="FAC") Faculty
+                .row
+                    .col-2 
+                        label(for='Dept') Department:
+                    .col-2
+                        select(name='Dept' id="dept")
+                            option(value="MTH") Math
+                            option(value="BIO") Biology
+                            option(value="CSC") Computer Science
+                            option(value="HIS") History
+                .row
+                    .col-2 
+                        button(type="submit" class="btn btn-primary") Submit
+                    .col-2
+                        button(type="reset" class="btn btn-primary") Reset Form
+                    .col-2
+                        button(type="button" class="btn btn-primary" onclick="history.back()") Back
