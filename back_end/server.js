@@ -158,10 +158,13 @@ app.post('/customer/update', (req,res) =>{
 
 app.post('/customer/update/action', (req,res) =>{
     console.log('Got body:', req.body)
-    var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `email` = '" + req.body.Email + "', `password` = '" + req.body.password + "', `staffRole` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
+    var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `staffRole` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
     con.query(str);
     res.redirect("/customerPage");
+})
 
+app.get('/update/password', (req, res) =>{
+    res.render('PasswordUpdate')
 })
 
 app.get('/feedback', checkAuthenticated, (req, res) =>{
