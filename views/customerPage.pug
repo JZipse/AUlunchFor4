@@ -21,7 +21,11 @@ html
                     .col
                         button(type="button" class="btn btn-primary" onclick="window.location.href='/customer/update'") Update My Account
                     .col
-                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/inactiveToggle") List Me As Inactive/Active
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/inactiveToggle'") List Me As Inactive/Active
+                        if(messages.active)
+                            p #{messages.active}
+                        if(messages.inactive)
+                            p #{messages.inactive}
                     .col
                         button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
                     .col

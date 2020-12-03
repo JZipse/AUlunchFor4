@@ -58,10 +58,14 @@ app.post('/update/password/action',[
 ], (req, res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/update/password')
     }else{
         console.log('Got body:', req.body)
-        res.redirect('/adminLogin')
+        res.send('not impemented yet')
     }
 })
 
@@ -235,6 +239,39 @@ app.post('/feedback/Insert',[
         res.send("This forms functinality has yet to be implemented.")
     }
 });
+
+app.get('/inactiveToggle', (req, res) =>{
+    con.query('SELECT * FROM users', (err,rows) => {
+        if(err) throw err;
+        var act = -1;
+        for(let i = 0; i < rows.length; i++){
+            if(rows[i].internalID == req.user.id){
+                if(Number(rows[i].active) == 1){
+                    console.log(Number(rows[i].active))
+                    act = 0;
+                }else{
+                    console.log(Number(rows[i].active))
+                    act = 1;
+                }
+            }
+        }
+        console.log('act:', act)
+        if (act === 1){
+            console.log('working1')
+            req.flash('inactive', 'you now are inactive')
+            var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
+            con.query(str);
+            res.redirect('/customerPage')
+        }else{
+            console.log('working2')
+            req.flash('active', 'you now are active')
+            var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
+            con.query(str);
+            res.redirect('/customerPage')
+        }
+        
+    })
+})
 
 app.get('/customerPage', checkAuthenticated, (req, res) =>{
     res.render('customerPage');
