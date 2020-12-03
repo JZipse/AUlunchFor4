@@ -275,12 +275,12 @@ app.get('/inactiveToggle', (req, res) =>{
         }
         console.log('act:', act)
         if (act === 1){
-            req.flash('inactive', 'you now are inactive')
+            req.flash('active', 'you now are active')
             var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
             con.query(str);
             res.redirect('/customerPage')
         }else{
-            req.flash('active', 'you now are active')
+            req.flash('inactive', 'you now are inactive')
             var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
             con.query(str);
             res.redirect('/customerPage')

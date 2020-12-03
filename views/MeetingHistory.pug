@@ -28,7 +28,15 @@ html
                             th member3
                             th member4
                             th member5
-                        
+                            for m in meetings
+                                tr
+                                    td #{m.meetDate}
+                                    td #{m.meetingID}
+                                    td #{m.member1}
+                                    td #{m.member2}
+                                    td #{m.member3}
+                                    td #{m.member4}
+                                    td #{m.member5}
             .row
                 .col-2
-                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back 
