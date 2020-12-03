@@ -55,7 +55,7 @@ app.get('/update/password', (req, res) =>{
 app.post('/update/password/action',[
     body("email").notEmpty().isEmail().withMessage("Input Email for Updating your Password."),
     body("password").notEmpty().isLength({min: 4, max: 14}).withMessage("Input a new Pass word that is 4-14 digits long")
-], async (req, res) =>{
+], (req, res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         for(let i = 0;i < errors.array().length;i++){
@@ -80,7 +80,7 @@ app.post('/update/password/action',[
             if(pass != null){
                 // having trouble getting this to work.
                 console.log('Got body:', pass)
-                const hashedPassword = await bcrypt.hash(pass, 10);
+                //const hashedPassword = await bcrypt.hash(pass, 10);
                 let str = "UPDATE `users` SET password = '" + hashedPassword + "' where `email` = '" + req.body.email + "'";
                 console.log(str)
                 //con.query(str)
