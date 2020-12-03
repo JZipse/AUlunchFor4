@@ -68,7 +68,7 @@ app.post('/update/password/action',[
         res.redirect('/update/password')
     }else{
         console.log('Got body:', req.body)
-        con.query('SELECT EMAIL, PASSWORD FROM users', (err,rows) => {
+        con.query('SELECT EMAIL, PASSWORD FROM users', async (err,rows) => {
             console.log('data: ', rows)
             var pass;
 
@@ -83,10 +83,10 @@ app.post('/update/password/action',[
             if(pass != null){
                 // having trouble getting this to work.
                 console.log('Got body:', pass)
-                //const hashedPassword = await bcrypt.hash(pass, 10);
+                const hashedPassword = await bcrypt.hash(pass, 10);
                 let str = "UPDATE `users` SET password = '" + hashedPassword + "' where `email` = '" + req.body.email + "'";
                 console.log(str)
-                //con.query(str)
+                con.query(str)
                 res.redirect('/adminLogin')
             }else{
                 console.log(pass != null)
@@ -173,7 +173,6 @@ app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
 app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
     res.render('adminLogin');
     con.query('SELECT internalID, EMAIL, PASSWORD, ISADMIN FROM users', (err,rows) => {
-        
         if(err) throw err;
         console.log('Data received from Db:');
         //console.log(rows);
@@ -288,7 +287,6 @@ app.get('/inactiveToggle', (req, res) =>{
             con.query(str);
             res.redirect('/customerPage')
         }
-        
     })
 })
 
