@@ -25,16 +25,25 @@ html
                         label(for='fName') First Name:
                     .col-2
                         input(name='fName' value=data[0].firstName)
+                    .col 
+                        if(messages.fName)
+                            p #{messages.fName}
                 .row
                     .col-2
                         label(for='lName') Last Name:
                     .col-2
                         input(name="lName" value=data[0].lastName)
+                    .col
+                        if(messages.lName)
+                                p #{messages.lName}
                 .row
                     .col-2
                         label(for='schoolID') ID:
                     .col-2
                         input(name='schoolID' value=data[0].schoolID)
+                    .col
+                        if(messages.schoolID)
+                            p #{messages.schoolID}
                 .row
                     .col-2 
                         label(for='Role') Role:
@@ -42,6 +51,9 @@ html
                         select(name='Role' id="role" value=data[0].staffRole)
                             option(value="STA") Staff
                             option(value="FAC") Faculty
+                    .col
+                        if(messages.Role)
+                            p #{messages.Role}
                 .row
                     .col-2 
                         label(for='Dept') Department:
@@ -51,6 +63,9 @@ html
                             option(value="BIO") Biology
                             option(value="CSC") Computer Science
                             option(value="HIS") History
+                    .col
+                        if(messages.Dept)
+                            p #{messages.Dept}
                 .row
                     .col-2 
                         button(name="ID" type="submit" class="btn btn-primary" value=data[0].internalID) Submit

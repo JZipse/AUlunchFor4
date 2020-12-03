@@ -24,6 +24,9 @@ html
                 .row
                     .col
                         textarea(name="feedback" value="Please Provide Feedback")
+                    .col
+                        if(messages.err)
+                            p #{messages.err}
                 .row
                     .col-2
                         button(type="submit" class="btn btn-primary") Submit

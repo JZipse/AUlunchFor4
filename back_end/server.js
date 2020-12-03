@@ -80,7 +80,11 @@ app.post('/formaction', [
                         ], async (req,res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/form')
     }else{
         console.log('Got body:', req.body)
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -111,7 +115,11 @@ app.post('/form/delete/action',[
 ], (req,res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/form/delete')
     }else{
         console.log('Got body:', req.body)
         var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
@@ -165,8 +173,6 @@ app.post('/adminLogin', (req, res) => {
 
 
 // Customer functionality begins here.
-
-
 app.post('/customerLogin', passport.authenticate('local', {
     successRedirect: '/customerPage',
     failureRedirect: '/adminLogin',
@@ -181,7 +187,7 @@ app.post('/customer/delete', (req,res) => {
         res.redirect('/adminLogin')
 })
 
-app.post('/customer/update', (req,res) =>{
+app.get('/customer/update', (req,res) =>{
         console.log('Got user:', req.user)
         con.query('SELECT * FROM users WHERE internalID = ' + req.user.id, (err,rows) => {
             console.log('Data received from Db:');
@@ -199,7 +205,11 @@ app.post('/customer/update/action',[
 ], (req,res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/customer/update')
     }else{
         console.log('Got user:', req.user)
         var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `staffRole` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
@@ -217,7 +227,9 @@ app.post('/feedback/Insert',[
 ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        console.log("this is interesting: ", errors.array()[0])
+        req.flash('err', errors.array()[0].msg)
+        res.redirect('/feedback')
     }else{
         console.log('Got body:', req.user)
         res.send("This forms functinality has yet to be implemented.")
