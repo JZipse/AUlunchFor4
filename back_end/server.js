@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 const express = require('express');
@@ -11,9 +11,9 @@ const session = require('express-session');
 const initializePassport = require('./passport-config');
 
 initializePassport(
-     passport, 
-     email => customers.find(user => user.email === email),
-     id => customers.find(user => user.id === id)
+    passport,
+    email => customers.find(user => user.email === email),
+    id => customers.find(user => user.id === id)
 );
 
 const customers = [];
@@ -25,7 +25,7 @@ const con = mysql.createConnection({
     database: "lunch44F2020"
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
@@ -35,7 +35,7 @@ app.set('view engine', 'pug');
 app.set('views', '../views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(flash())
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -51,12 +51,12 @@ app.use(passport.session())
 
 
 // admin functionality begins here
-app.get('/form', (req, res) =>{
+app.get('/form', (req, res) => {
     res.render('form');
 });
 
-app.post('/formaction', async (req,res) =>{
-    
+app.post('/formaction', async (req, res) => {
+
     console.log('Got body:', req.body)
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -67,19 +67,19 @@ app.post('/formaction', async (req,res) =>{
 })
 
 app.get('/form/delete', (req, res) => {
-    con.query('SELECT * FROM users', (err,rows) => {
-        if(err) throw err;
+    con.query('SELECT * FROM users', (err, rows) => {
+        if (err) throw err;
 
         console.log(rows.password);
-      
+
         console.log('Data received from Db:');
         console.log(rows);
 
-        res.render('DeleteUser', {"users": rows});
+        res.render('DeleteUser', { "users": rows });
     });
 })
 
-app.post('/form/delete/action', (req,res) => {
+app.post('/form/delete/action', (req, res) => {
     console.log('Got body:', req.body)
     var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
     console.log(str);
@@ -87,44 +87,60 @@ app.post('/form/delete/action', (req,res) => {
     res.redirect('/adminPage')
 })
 
-app.get('/reports', checkAuthenticated, (req,res) => {
+app.get('/reports', checkAuthenticated, (req, res) => {
     res.render('Reports')
 })
 
-app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
-    console.log('Got body:', req.body)
-    res.send('Generate Meetings Page')
+app.get('/generateMeetings', (req, res) => {
+    res.render('generateMeetings')
+});
+
+app.post('/newMeeting', async (req, res) => {
+    var meeting = [];
+    con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT 4;", function (err, result, fields) {
+        if (err) throw err;
+        //console.log(result[0].internalID);
+        meeting.push(result[0].internalID);
+        meeting.push(result[1].internalID);
+        meeting.push(result[2].internalID);
+        meeting.push(result[3].internalID);
+        for (i = 0; i <= 3; i++) {
+            con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
+        }
+        con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "')");
+    });
+    res.redirect('/generateMeetings')
 });
 
 app.get('/adminLogin', (req, res) => {
     res.render('adminLogin');
-    con.query('SELECT internalID, EMAIL, PASSWORD FROM users', (err,rows) => {
-        
-        if(err) throw err;
+    con.query('SELECT internalID, EMAIL, PASSWORD FROM users', (err, rows) => {
+
+        if (err) throw err;
         console.log('Data received from Db:');
         //console.log(rows);
-        for(let i = 0; i < (rows.length); i++){
-            const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID};
+        for (let i = 0; i < (rows.length); i++) {
+            const user = { email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID };
             //console.log(user);
-            customers.push(user); 
+            customers.push(user);
         }
         //console.log(customers);
     });
 });
 
-app.get('/adminPage', checkAuthenticated, (req, res) => {
+app.get('/adminPage', (req, res) => {
     res.render('adminPage');
-    
+
 });
 
 app.post('/adminLogin', (req, res) => {
-   //console.log('Got Body:', req.body);
- 
+    //console.log('Got Body:', req.body);
+
     const adminUser = "user";
     const adminPass = "pass";
-    if (req.body.user == adminUser && req.body.pass == adminPass){
+    if (req.body.user == adminUser && req.body.pass == adminPass) {
         res.redirect('/adminPage');
-    }else{
+    } else {
         res.send("Wrong Username or Passord for Admin");
     }
 });
@@ -138,8 +154,8 @@ app.post('/customerLogin', passport.authenticate('local', {
     failureRedirect: '/adminLogin',
     failureFlash: true
 }));
-    
-app.post('/customer/delete', (req,res) => {
+
+app.post('/customer/delete', (req, res) => {
     console.log('Got body:', req.body)
     var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
     console.log(str);
@@ -147,24 +163,24 @@ app.post('/customer/delete', (req,res) => {
     res.redirect('/adminLogin')
 })
 
-app.post('/customer/update', (req,res) =>{
+app.post('/customer/update', (req, res) => {
     console.log('Got user:', req.user)
-    con.query('SELECT * FROM users WHERE internalID = ' + req.user.id, (err,rows) => {
+    con.query('SELECT * FROM users WHERE internalID = ' + req.user.id, (err, rows) => {
         console.log('Data received from Db:');
         console.log(rows);
-        res.render('customerUpdate', {"data": rows})
+        res.render('customerUpdate', { "data": rows })
     })
 })
 
-app.post('/customer/update/action', (req,res) =>{
+app.post('/customer/update/action', (req, res) => {
     console.log('Got body:', req.body)
-    var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `email` = '" + req.body.Email + "', `password` = '" + req.body.password + "', `staffRole` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
+    var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `email` = '" + req.body.Email + "', `password` = '" + req.body.password + "', `staffRole` = '" + req.body.Role + "', `department` = '" + req.body.Dept + "', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
     con.query(str);
     res.redirect("/customerPage");
 
 })
 
-app.get('/feedback', checkAuthenticated, (req, res) =>{
+app.get('/feedback', checkAuthenticated, (req, res) => {
     res.render('feedback');
 });
 
@@ -172,12 +188,12 @@ app.post('/feedback/Insert', (req, res) => {
     console.log('Got body:', req.body)
 });
 
-app.get('/customerPage', checkAuthenticated, (req, res) =>{
+app.get('/customerPage', checkAuthenticated, (req, res) => {
     res.render('customerPage');
 });
 
-function checkAuthenticated(req, res, next){
-    if (req.isAuthenticated()){
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('adminLogin')
