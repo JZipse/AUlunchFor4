@@ -133,7 +133,6 @@ app.get('/form/delete', (req, res) => {
         if(err) throw err;
 
         console.log(rows.password);
-      
         console.log('Data received from Db:');
         console.log(rows);
 
@@ -206,7 +205,8 @@ app.post('/customer/delete', (req,res) => {
         var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.user.id + "')";
         console.log(str);
         con.query(str);
-        res.redirect('/adminLogin')
+        
+        
 })
 
 app.get('/customer/update', (req,res) =>{
@@ -292,16 +292,11 @@ app.get('/customerPage', checkAuthenticated, (req, res) =>{
     res.render('customerPage');
 });
 
-app.get('/meetingHistory', (req,res) => {
-    res.render('MeetingHistory');
-})
-
 app.post('/meetingHistory', (req, res) => {
     con.query(`SELECT * from meetings where  member1 = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`, 
     (err, rows) => {
         if (err) throw err;
-        console.log(rows);
-
+        res.render('meetingHistory', {meetings: rows});
     });
 })
 
