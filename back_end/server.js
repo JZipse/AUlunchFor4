@@ -98,13 +98,13 @@ app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
 
 app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
     res.render('adminLogin');
-    con.query('SELECT internalID, EMAIL, PASSWORD FROM users', (err,rows) => {
+    con.query('SELECT internalID, EMAIL, PASSWORD, ISADMIN FROM users', (err,rows) => {
         
         if(err) throw err;
         console.log('Data received from Db:');
         //console.log(rows);
         for(let i = 0; i < (rows.length); i++){
-            const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID};
+            const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID, admin: rows[i].ISADMIN};
             //console.log(user);
             customers.push(user); 
         }
@@ -112,23 +112,16 @@ app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
     });
 });
 
-app.get('/adminPage', (req, res) => {
+app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
     res.render('adminPage');
     
 });
 
-app.post('/adminLogin', (req, res) => {
-   //console.log('Got Body:', req.body);
- 
-    const adminUser = "user";
-    const adminPass = "pass";
-    if (req.body.user == adminUser && req.body.pass == adminPass){
-        res.redirect('/adminPage');
-    }else{
-        res.send("Wrong Username or Passord for Admin");
-    }
-});
-
+app.post('/adminLogin', passport.authenticate('local', {
+    successRedirect: '/adminPage',
+    failureRedirect: '/adminLogin',
+    failureFlash: true
+}));
 
 // Customer functionality begins here.
 app.post('/customerLogin', passport.authenticate('local', {
@@ -191,6 +184,15 @@ function checkNotAuthenticated(req, res, next){
         return res.redirect('/customerPage')
     }
     next()
+}
+
+function checkRole(role){
+    return ( req, res, next) => {
+        if (req.user.admin !== role){
+            return res.redirect('/adminLogin')
+        }
+        next()
+    }
 }
 
 app.listen(3000);
