@@ -175,13 +175,10 @@ app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
     con.query('SELECT internalID, EMAIL, PASSWORD, ISADMIN FROM users', (err,rows) => {
         if(err) throw err;
         console.log('Data received from Db:');
-        //console.log(rows);
         for(let i = 0; i < (rows.length); i++){
             const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID, admin: rows[i].ISADMIN};
-            //console.log(user);
             customers.push(user); 
         }
-        //console.log(customers);
     });
 });
 
@@ -202,7 +199,8 @@ app.post('/customerLogin', passport.authenticate('local', {
     failureRedirect: '/adminLogin',
     failureFlash: true
 }));
-    
+
+
 app.post('/customer/delete', (req,res) => {
         console.log('Got body:', req.user)
         var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.user.id + "')";
@@ -321,5 +319,6 @@ function checkRole(role){
         next()
     }
 }
+
 
 app.listen(3000);
