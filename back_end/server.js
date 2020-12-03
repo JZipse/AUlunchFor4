@@ -9,6 +9,7 @@ const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session');
 const initializePassport = require('./passport-config');
+const { body, validationResult } = require('express-validator');
 
 initializePassport(
      passport, 
@@ -46,24 +47,49 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 
+// forgot password functionalsity.
+app.get('/update/password', (req, res) =>{
+    res.render('PasswordUpdate')
+})
 
+app.post('/update/password/action',[
+    body("email").notEmpty().isEmail().withMessage("Input Email for Updating your Password."),
+    body("password").notEmpty().isLength({min: 4, max: 14}).withMessage("Input a new Pass word that is 4-14 digits long")
+], (req, res) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }else{
+        console.log('Got body:', req.body)
+        res.redirect('/adminLogin')
+    }
+})
 
-
-
-// admin functionality begins here
+// admin functionality begins here.
 app.get('/form', (req, res) =>{
     res.render('form');
 });
 
-app.post('/formaction', async (req,res) =>{
-    
-    console.log('Got body:', req.body)
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+app.post('/formaction', [
+                        body("fName").notEmpty().withMessage("Must have a First Name."), 
+                        body("lName").notEmpty().withMessage("Must have a Last Name."), 
+                        body("ID").notEmpty().isLength({ min: 7, max: 7 }).withMessage("Your school's ID's are 7 digits Long."), 
+                        body("Email").notEmpty().isEmail().withMessage("You must input a proper email address."), 
+                        body("password").notEmpty().isLength({ min: 4, max: 14 }).withMessage("You must have password that is 4-14 characters in length."), body("Role").notEmpty().withMessage("you must have a role."), 
+                        body("Dept").notEmpty().withMessage("You must have a department.")
+                        ], async (req,res) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }else{
+        console.log('Got body:', req.body)
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/adminLogin')
+        var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/adminLogin')
+    }
 })
 
 app.get('/form/delete', (req, res) => {
@@ -79,12 +105,20 @@ app.get('/form/delete', (req, res) => {
     });
 })
 
-app.post('/form/delete/action', (req,res) => {
-    console.log('Got body:', req.body)
-    var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/adminPage')
+app.post('/form/delete/action',[
+    body("ID").notEmpty().isNumeric().withMessage("something went wrong with the application ID was not found.")
+
+], (req,res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }else{
+        console.log('Got body:', req.body)
+        var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/adminPage')
+    }
 })
 
 app.get('/reports', checkAuthenticated, (req,res) => {
@@ -140,39 +174,54 @@ app.post('/customerLogin', passport.authenticate('local', {
 }));
     
 app.post('/customer/delete', (req,res) => {
-    console.log('Got body:', req.body)
-    var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.body.ID + "')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/adminLogin')
+        console.log('Got body:', req.user)
+        var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.user.id + "')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/adminLogin')
 })
 
 app.post('/customer/update', (req,res) =>{
-    console.log('Got user:', req.user)
-    con.query('SELECT * FROM users WHERE internalID = ' + req.user.id, (err,rows) => {
-        console.log('Data received from Db:');
-        console.log(rows);
-        res.render('customerUpdate', {"data": rows})
-    })
+        console.log('Got user:', req.user)
+        con.query('SELECT * FROM users WHERE internalID = ' + req.user.id, (err,rows) => {
+            console.log('Data received from Db:');
+            console.log(rows);
+            res.render('customerUpdate', {"data": rows})
+        })
 })
 
-app.post('/customer/update/action', (req,res) =>{
-    console.log('Got body:', req.body)
-    var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `staffRole` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
-    con.query(str);
-    res.redirect("/customerPage");
-})
-
-app.get('/update/password', (req, res) =>{
-    res.render('PasswordUpdate')
+app.post('/customer/update/action',[
+    body("fName").notEmpty().withMessage("You must input a First Name."),
+    body("lName").notEmpty().withMessage("You must have a Last Name."),
+    body("schoolID").notEmpty().isNumeric().isLength({min:7, max:7}).withMessage("School IDs are 7 digits long."),
+    body("Role").notEmpty().withMessage("You must have a Role Selected."),
+    body("Dept").notEmpty().withMessage("You must have a Department Selected.")
+], (req,res) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }else{
+        console.log('Got user:', req.user)
+        var str = "UPDATE `users` SET `firstName` = '" + req.body.fName + "', `lastName` = '" + req.body.lName + "', `schoolID` = '" + req.body.schoolID + "', `staffRole` = '" + req.body.Role + "', `department` = '"+ req.body.Dept +"', `active` = '1' WHERE (`internalID` = '" + req.body.ID + "')";
+        con.query(str);
+        res.redirect("/customerPage");
+    }
 })
 
 app.get('/feedback', checkAuthenticated, (req, res) =>{
     res.render('feedback');
 });
 
-app.post('/feedback/Insert', (req, res) => {
-    console.log('Got body:', req.body)
+app.post('/feedback/Insert',[
+    body("feedback").notEmpty().withMessage("Feedback on your meeting would be very helpful.")
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }else{
+        console.log('Got body:', req.user)
+        res.send("This forms functinality has yet to be implemented.")
+    }
 });
 
 app.get('/customerPage', checkAuthenticated, (req, res) =>{

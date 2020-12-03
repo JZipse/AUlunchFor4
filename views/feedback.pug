@@ -17,7 +17,7 @@ html
 
         h1 AU Lunch For 4
         .container
-            form(action='post-test', method='post')
+            form(action='/feedback/Insert', method='post')
                 .row
                     .col 
                         label(for='feedback') Feedback:
@@ -29,3 +29,5 @@ html
                         button(type="submit" class="btn btn-primary") Submit
                     .col-2
                         button(type="reset" class="btn btn-primary") Reset Form
+                    .col-2
+                        button(type="button" class="btn btn-primary" onclick="history.back()") Back
