@@ -68,7 +68,7 @@ app.post('/update/password/action',[
         res.redirect('/update/password')
     }else{
         console.log('Got body:', req.body)
-        con.query('SELECT EMAIL, PASSWORD FROM users', async (err,rows) => {
+        con.query('SELECT EMAIL FROM users', async (err,rows) => {
             console.log('data: ', rows)
             var pass;
 
@@ -291,6 +291,19 @@ app.get('/inactiveToggle', (req, res) =>{
 app.get('/customerPage', checkAuthenticated, (req, res) =>{
     res.render('customerPage');
 });
+
+app.get('/meetingHistory', (req,res) => {
+    res.render('MeetingHistory');
+})
+
+app.post('/meetingHistory', (req, res) => {
+    con.query(`SELECT * from meetings where  member1 = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`, 
+    (err, rows) => {
+        if (err) throw err;
+        console.log(rows);
+
+    });
+})
 
 app.delete('/logout', (req, res) => {
     req.logOut()
