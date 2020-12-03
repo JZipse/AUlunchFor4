@@ -55,7 +55,7 @@ app.get('/update/password', (req, res) =>{
 app.post('/update/password/action',[
     body("email").notEmpty().isEmail().withMessage("Input Email for Updating your Password."),
     body("password").notEmpty().isLength({min: 4, max: 14}).withMessage("Input a new Pass word that is 4-14 digits long")
-], (req, res) =>{
+], async (req, res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         for(let i = 0;i < errors.array().length;i++){
@@ -65,7 +65,32 @@ app.post('/update/password/action',[
         res.redirect('/update/password')
     }else{
         console.log('Got body:', req.body)
-        res.send('not impemented yet')
+        con.query('SELECT EMAIL, PASSWORD FROM users', (err,rows) => {
+            console.log('data: ', rows)
+            var pass;
+
+            if(err) throw err;
+            for(let i = 0; i < rows.length; i++){
+                if(rows[i].EMAIL == req.body.email){
+                    pass = req.body.password;
+                }
+            }
+
+            console.log("pass: ", pass)
+            if(pass != null){
+                // having trouble getting this to work.
+                console.log('Got body:', pass)
+                const hashedPassword = await bcrypt.hash(pass, 10);
+                let str = "UPDATE `users` SET password = '" + hashedPassword + "' where `email` = '" + req.body.email + "'";
+                console.log(str)
+                //con.query(str)
+                res.redirect('/adminLogin')
+            }else{
+                console.log(pass != null)
+                req.flash('noAccount', 'No Account has been made for that Email.')
+                res.redirect('/update/password')
+            }
+        })
     }
 })
 
