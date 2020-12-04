@@ -20,13 +20,20 @@ html
             form(action='/feedback/Insert', method='post')
                 .row
                     .col 
-                        label(for='feedback') Feedback for meeting with ID: #{meetingID}
+                        label(for='feedback') Feedback for meeting with ID: #{meetingID} 
+                    .col
+                        
+                    .col
+                        label(for='meetDate') What day did the meeting happen:
+                        
                 .row
                     .col
                         textarea(name="feedback" value="Please Provide Feedback")
                     .col
                         if(messages.err)
                             p #{messages.err}
+                    .col
+                        input(type="date" name="meetDate")
                 .row
                     .col-2
                         button(type="submit" class="btn btn-primary") Submit

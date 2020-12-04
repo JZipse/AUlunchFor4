@@ -400,7 +400,7 @@ app.get('/customerPage', checkAuthenticated, (req, res) =>{
     if(rows.length == 0){
         console.log("R1");
         let dataV = {leader : 0}
-        res.render('customerPage',dataV);    
+        res.render('customerPage', dataV);    
     }
     else{
         console.log("R2");
