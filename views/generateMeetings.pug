@@ -20,3 +20,25 @@ html
                 .col
                     form(action='/newMeeting', method='post')
                         button(type='submit' class='btn btn-primary') Create New Meeting
+        h1 List of Meetings
+        .container
+            .row 
+                .col
+                    table(style='width:100%', border='1', class="table center",)
+                        tr 
+                        th Meet Date
+                        th Meeting ID
+                        th Meeting Leader
+                        th Member 2
+                        th Member 3
+                        th Member 4
+                        th Member 5
+                        each item in items
+                            tr
+                                td=item.meetDate
+                                td=item.meetingID
+                                td=item.meetingLeader
+                                td=item.member2
+                                td=item.member3
+                                td=item.member4
+                                td=item.member5

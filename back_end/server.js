@@ -106,21 +106,21 @@ app.get('/form', (req, res) => {
 });
 
 app.post('/formaction', [
-                        body("fName").notEmpty().withMessage("Must have a First Name."), 
-                        body("lName").notEmpty().withMessage("Must have a Last Name."), 
-                        body("ID").notEmpty().isLength({ min: 7, max: 7 }).withMessage("Your school's ID's are 7 digits Long."), 
-                        body("Email").notEmpty().isEmail().withMessage("You must input a proper email address."), 
-                        body("password").notEmpty().isLength({ min: 4, max: 14 }).withMessage("You must have password that is 4-14 characters in length."), body("Role").notEmpty().withMessage("you must have a role."), 
-                        body("Dept").notEmpty().withMessage("You must have a department.")
-                        ], async (req,res) =>{
+    body("fName").notEmpty().withMessage("Must have a First Name."),
+    body("lName").notEmpty().withMessage("Must have a Last Name."),
+    body("ID").notEmpty().isLength({ min: 7, max: 7 }).withMessage("Your school's ID's are 7 digits Long."),
+    body("Email").notEmpty().isEmail().withMessage("You must input a proper email address."),
+    body("password").notEmpty().isLength({ min: 4, max: 14 }).withMessage("You must have password that is 4-14 characters in length."), body("Role").notEmpty().withMessage("you must have a role."),
+    body("Dept").notEmpty().withMessage("You must have a department.")
+], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        for(let i = 0;i < errors.array().length;i++){
+        for (let i = 0; i < errors.array().length; i++) {
             console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
             req.flash(errors.array()[i].param, errors.array()[i].msg)
         }
         res.redirect('/form')
-    }else{
+    } else {
         console.log('Got body:', req.body)
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -168,7 +168,13 @@ app.get('/reports', checkAuthenticated, (req, res) => {
 })
 
 app.get('/generateMeetings', checkAuthenticated, (req, res) => {
-    res.render('generateMeetings')
+    con.query("SELECT * FROM meetings", function (err, rows, fields) {
+        if (err) throw err
+        res.render('generateMeetings', {
+            title: 'Meetings',
+            items: rows
+        })
+    });
 });
 
 app.post('/newMeeting', async (req, res) => {
@@ -295,35 +301,35 @@ app.post('/customer/update/action', [
     }
 })
 
-app.get('/feedback', checkAuthenticated, (req, res) =>{
+app.get('/feedback', checkAuthenticated, (req, res) => {
     var id = req.user.id;
     var mID = "";
-    var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
-        "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")"+
-        "UNION "+
-        "SELECT meetingID from meetings RIGHT OUTER JOIN "+
-        "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = "+ id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")", 
-            (err,rows)=>{
-                if(err) throw err;
-                if(rows.length == 0){
-                    console.log("No meetings to comment on...");
-                    res.redirect("/customerPage");
-                }
-                else{
-                let dataV = {meetingID : rows[0].meetingID}
+    var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN " +
+        "comments ON meetingID = comments.meetID " +
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " " +
+        "OR member2 = " + id + " " +
+        "OR member3 = " + id + " " +
+        "OR member4 = " + id + " " +
+        "OR member5 = " + id + ")" +
+        "UNION " +
+        "SELECT meetingID from meetings RIGHT OUTER JOIN " +
+        "comments ON meetingID = comments.meetID " +
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " " +
+        "OR member2 = " + id + " " +
+        "OR member3 = " + id + " " +
+        "OR member4 = " + id + " " +
+        "OR member5 = " + id + ")",
+        (err, rows) => {
+            if (err) throw err;
+            if (rows.length == 0) {
+                console.log("No meetings to comment on...");
+                res.redirect("/customerPage");
+            }
+            else {
+                let dataV = { meetingID: rows[0].meetingID }
                 res.render('feedback', dataV);
-                }
-            });
+            }
+        });
 })
 
 app.post('/feedback/Insert', [
@@ -334,7 +340,7 @@ app.post('/feedback/Insert', [
         console.log("this is interesting: ", errors.array()[0])
         req.flash('err', errors.array()[0].msg)
         res.redirect('/feedback')
-    }else{      
+    } else {
         var id = req.user.id;
         let meetDate = req.body.meetDate
         var mID = "";
@@ -395,7 +401,7 @@ app.get('/inactiveToggle', (req, res) => {
     })
 })
 
-app.get('/customerPage', checkAuthenticated, (req, res) =>{
+app.get('/customerPage', checkAuthenticated, (req, res) => {
     con.query("SELECT meetingLeader from meetings WHERE meetingLeader = "
     + req.user.id + " AND meetDate = '0000-00-00'",
     (err,rows)=>{
