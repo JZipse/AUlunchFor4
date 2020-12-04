@@ -336,6 +336,7 @@ app.post('/feedback/Insert', [
         res.redirect('/feedback')
     }else{      
         var id = req.user.id;
+        let meetDate = req.body.meetDate
         var mID = "";
         var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
@@ -355,7 +356,10 @@ app.post('/feedback/Insert', [
                 if(err) throw err;
                 mID=(rows[0].meetingID).toString();
                 var str = "INSERT INTO `comments` (`meetID`, `memberID`, `comment`) VALUES ("+ mID+ "," + req.user.id + ",'" + req.body.feedback+"')";
+                //console.log("Got Date" + req.body.meetDate);
+                var updateMeet = "UPDATE meetings SET meetDate = ' " + meetDate + " ' where (`meetingID` = " + mID + ")"
                 con.query(str);
+                con.query(updateMeet);
                 res.redirect('/customerPage')
             });
     }
