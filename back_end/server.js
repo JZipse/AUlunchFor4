@@ -98,7 +98,6 @@ app.get('/generateMeetings', (req, res) => {
 
 app.post('/newMeeting', async (req, res) => {
     var meeting = [];
-    var remain = 4 % 4
     con.query("SELECT count(*) AS count FROM lunch44F2020.users", function (err, results) {
         var remain = results[0].count % 4;
         var loops;
