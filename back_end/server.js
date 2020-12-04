@@ -11,11 +11,7 @@ const session = require('express-session');
 const initializePassport = require('./passport-config');
 const { body, validationResult } = require('express-validator');
 const methodOverride = require('method-override');
-<<<<<<< HEAD
 const { Console } = require('console');
-=======
-const { count } = require('console');
->>>>>>> Bryan
 
 
 initializePassport(
@@ -109,7 +105,6 @@ app.get('/form', (req, res) => {
     res.render('form');
 });
 
-<<<<<<< HEAD
 app.post('/formaction', [
                         body("fName").notEmpty().withMessage("Must have a First Name."), 
                         body("lName").notEmpty().withMessage("Must have a Last Name."), 
@@ -134,17 +129,6 @@ app.post('/formaction', [
         con.query(str);
         res.redirect('/adminLogin')
     }
-=======
-app.post('/formaction', async (req, res) => {
-
-    console.log('Got body:', req.body)
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '1')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/adminLogin')
->>>>>>> Bryan
 })
 
 app.get('/form/delete', (req, res) => {
@@ -360,7 +344,6 @@ app.post('/feedback/Insert', [
         console.log("this is interesting: ", errors.array()[0])
         req.flash('err', errors.array()[0].msg)
         res.redirect('/feedback')
-<<<<<<< HEAD
     }else{      
         var id = req.user.id;
         var mID = "";
@@ -385,11 +368,6 @@ app.post('/feedback/Insert', [
                 con.query(str);
                 res.redirect('/customerPage')
             });
-=======
-    } else {
-        console.log('Got body:', req.user)
-        res.send("This forms functinality has yet to be implemented.")
->>>>>>> Bryan
     }
 });
 
@@ -423,7 +401,6 @@ app.get('/inactiveToggle', (req, res) => {
     })
 })
 
-<<<<<<< HEAD
 app.get('/customerPage', checkAuthenticated, (req, res) =>{
     con.query("SELECT meetingLeader from meetings WHERE meetingLeader = "
     + req.user.id + " AND meetDate = '0000-00-00'",
@@ -441,10 +418,6 @@ app.get('/customerPage', checkAuthenticated, (req, res) =>{
         res.render('customerPage', dataV);
     }
     });
-=======
-app.get('/customerPage', checkAuthenticated, (req, res) => {
-    res.render('customerPage');
->>>>>>> Bryan
 });
 
 app.post('/meetingHistory', (req, res) => {
