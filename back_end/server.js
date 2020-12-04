@@ -421,7 +421,7 @@ app.get('/customerPage', checkAuthenticated, (req, res) => {
 });
 
 app.post('/meetingHistory', (req, res) => {
-    con.query(`SELECT * from meetings where  meetingLeader = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`,
+    con.query(`SELECT DATE_FORMAT(meetDate, '%Y-%m-%d') AS meetDate, meetingID, meetingLeader, member2, member3, member4, member5  from meetings where meetingLeader = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`,
         (err, rows) => {
             if (err) throw err;
             res.render('meetingHistory', { meetings: rows });
