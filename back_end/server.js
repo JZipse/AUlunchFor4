@@ -10,7 +10,8 @@ const flash = require('express-flash')
 const session = require('express-session');
 const initializePassport = require('./passport-config');
 const { body, validationResult } = require('express-validator');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
+const { Console } = require('console');
 
 
 initializePassport(
@@ -321,9 +322,14 @@ app.get('/feedback', checkAuthenticated, (req, res) =>{
             "OR member5 = "+ id + ")", 
             (err,rows)=>{
                 if(err) throw err;
-                console.log(rows[0].meetingID);
+                if(rows.length == 0){
+                    console.log("No meetings to comment on...");
+                    res.redirect("/customerPage");
+                }
+                else{
                 let dataV = {meetingID : rows[0].meetingID}
                 res.render('feedback', dataV);
+                }
             });
 })
 
@@ -393,7 +399,22 @@ app.get('/inactiveToggle', (req, res) =>{
 })
 
 app.get('/customerPage', checkAuthenticated, (req, res) =>{
-    res.render('customerPage');
+    con.query("SELECT meetingLeader from meetings WHERE meetingLeader = "
+    + req.user.id + " AND meetDate = '0000-00-00'",
+    (err,rows)=>{
+    if(err) throw err;
+    console.log(rows);
+    if(rows.length == 0){
+        console.log("R1");
+        let dataV = {leader : 0}
+        res.render('customerPage',dataV);    
+    }
+    else{
+        console.log("R2");
+        let dataV = {leader : 1}
+        res.render('customerPage', dataV);
+    }
+    });
 });
 
 app.post('/meetingHistory', (req, res) => {

@@ -15,6 +15,7 @@ html
                         li(class = "nav-item")
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
         h1 Customer Page:
+        var leaderCheck = #{leader};
         form(method='post')
             .container
                 .row
@@ -27,7 +28,8 @@ html
                         if(messages.inactive)
                             p #{messages.inactive}
                     .col
-                        button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
+                        if leaderCheck == 1
+                            button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
                     .col
                         button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/meetingHistory") View My Meeting History
                 .row
