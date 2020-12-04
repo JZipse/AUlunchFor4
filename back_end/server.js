@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 const express = require('express');
@@ -10,14 +10,17 @@ const flash = require('express-flash')
 const session = require('express-session');
 const initializePassport = require('./passport-config');
 const { body, validationResult } = require('express-validator');
+const methodOverride = require('method-override')
+
 
 initializePassport(
-     passport, 
-     email => customers.find(user => user.email === email),
-     id => customers.find(user => user.id === id)
+    passport,
+    email => customers.find(user => user.email === email),
+    id => customers.find(user => user.id === id)
 );
 
 const customers = [];
+const meeting = [];
 
 const con = mysql.createConnection({
     host: "45.55.136.114",
@@ -26,7 +29,7 @@ const con = mysql.createConnection({
     database: "lunch44F2020"
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
@@ -36,7 +39,7 @@ app.set('view engine', 'pug');
 app.set('views', '../views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(flash())
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -45,6 +48,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(methodOverride('_method'))
 
 
 // forgot password functionalsity.
@@ -65,7 +69,33 @@ app.post('/update/password/action',[
         res.redirect('/update/password')
     }else{
         console.log('Got body:', req.body)
-        res.send('not impemented yet')
+        con.query('SELECT EMAIL FROM users', async (err,rows) => {
+            console.log('data: ', rows)
+            var pass;
+
+            if(err) throw err;
+            for(let i = 0; i < rows.length; i++){
+                if(rows[i].EMAIL == req.body.email){
+                    pass = req.body.password;
+                }
+            }
+
+            console.log("pass: ", pass)
+            if(pass != null){
+                // having trouble getting this to work.
+                console.log('Got body:', pass)
+                const hashedPassword = await bcrypt.hash(pass, 10);
+                let str = "UPDATE `users` SET password = '" + hashedPassword + "' where `email` = '" + req.body.email + "'";
+                console.log(str)
+                con.query(str)
+                res.redirect('/adminLogin')
+                //customers.length = 0;
+            }else{
+                console.log(pass != null)
+                req.flash('noAccount', 'No Account has been made for that Email.')
+                res.redirect('/update/password')
+            }
+        })
     }
 })
 
@@ -93,7 +123,7 @@ app.post('/formaction', [
         console.log('Got body:', req.body)
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
+        var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '1')";
         console.log(str);
         con.query(str);
         res.redirect('/adminLogin')
@@ -101,15 +131,14 @@ app.post('/formaction', [
 })
 
 app.get('/form/delete', (req, res) => {
-    con.query('SELECT * FROM users', (err,rows) => {
-        if(err) throw err;
+    con.query('SELECT * FROM users', (err, rows) => {
+        if (err) throw err;
 
         console.log(rows.password);
-      
         console.log('Data received from Db:');
         console.log(rows);
 
-        res.render('DeleteUser', {"users": rows});
+        res.render('DeleteUser', { "users": rows });
     });
 })
 
@@ -133,35 +162,79 @@ app.post('/form/delete/action',[
     }
 })
 
-app.get('/reports', checkAuthenticated, (req,res) => {
+app.get('/reports', checkAuthenticated, (req, res) => {
     res.render('Reports')
 })
 
-app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
-    console.log('Got body:', req.body)
-    res.send('Generate Meetings Page')
+app.get('/generateMeetings', checkAuthenticated, (req, res) => {
+    res.render('generateMeetings')
 });
 
-app.get('/adminLogin', (req, res) => {
-    res.render('adminLogin');
-    con.query('SELECT internalID, EMAIL, PASSWORD FROM users', (err,rows) => {
-        
+app.post('/newMeeting', async (req, res) => {
+    var meeting = [];
+    con.query("SELECT count(*) AS count FROM lunch44F2020.users WHERE active = 1;", function (err, results) {
+        var remain = results[0].count % 4;
+        var loops;
+        if (results[0].count < 3) {
+            console.log("Not Enough Users For Meeting")
+        } else if (results[0].count == 6) {
+            loops = 3;
+        } else {
+            if (remain == 1) {
+                loops = 5;
+            } else if (remain == 2) {
+                loops = 4;
+            } else if (remain == 3) {
+                if (results[0].count > 3) {
+                    loops = 4;
+                } else {
+                    loops = 3;
+                }
+            } else {
+                loops = 4;
+            }
+        }
+
+    console.log("Loop:" + loops);
+    console.log(remain);
+    console.log(results[0].count);
+    con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT 4;", function (err, result, fields) {
+        if (err) throw err;
+        console.log(results);
+    });
+    //  con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT 4;", function (err, result, fields) {
+    //      if (err) throw err;
+    //     console.log(result[0].internalID);
+    //     //  meeting.push(result[0].internalID);
+    //     //  meeting.push(result[1].internalID);
+    //     //  meeting.push(result[2].internalID);
+    //     //  meeting.push(result[3].internalID);
+    //     //  for (i = 0; i <= 3; i++) {
+    //     //      con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
+    //     //  }
+
+    // //     con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "')");
+    // // });
+    res.redirect('/generateMeetings')
+});
+});
+
+app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
+    customers.length = 0;
+    con.query('SELECT internalID, EMAIL, PASSWORD, ISADMIN FROM users', (err,rows) => {
         if(err) throw err;
         console.log('Data received from Db:');
-        //console.log(rows);
         for(let i = 0; i < (rows.length); i++){
-            const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID};
-            //console.log(user);
+            const user = {email: rows[i].EMAIL, password: rows[i].PASSWORD, id: rows[i].internalID, admin: rows[i].ISADMIN};
             customers.push(user); 
         }
-        //console.log(customers);
     });
+    setTimeout(function(){res.render('adminLogin')}, 100);
 });
 
-app.get('/adminPage', checkAuthenticated, (req, res) => {
+app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
     res.render('adminPage');
-    
-});
+})
 
 app.post('/adminLogin', (req, res) => {
    //console.log('Got Body:', req.body);
@@ -174,6 +247,11 @@ app.post('/adminLogin', (req, res) => {
     }
 });
 
+app.post('/adminLogin', passport.authenticate('local', {
+    successRedirect: '/adminPage',
+    failureRedirect: '/adminLogin',
+    failureFlash: true
+}));
 
 // Customer functionality begins here.
 app.post('/customerLogin', passport.authenticate('local', {
@@ -181,13 +259,15 @@ app.post('/customerLogin', passport.authenticate('local', {
     failureRedirect: '/adminLogin',
     failureFlash: true
 }));
-    
+
+
 app.post('/customer/delete', (req,res) => {
         console.log('Got body:', req.user)
         var str = "DELETE FROM `users` WHERE (`internalID` = '" + req.user.id + "')";
         console.log(str);
         con.query(str);
-        res.redirect('/adminLogin')
+        
+        
 })
 
 app.get('/customer/update', (req,res) =>{
@@ -299,17 +379,16 @@ app.get('/inactiveToggle', (req, res) =>{
         }
         console.log('act:', act)
         if (act === 1){
-            req.flash('inactive', 'you now are inactive')
-            var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
-            con.query(str);
-            res.redirect('/customerPage')
-        }else{
             req.flash('active', 'you now are active')
             var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
             con.query(str);
             res.redirect('/customerPage')
+        }else{
+            req.flash('inactive', 'you now are inactive')
+            var str = "UPDATE `users` SET `active` = '" + act + "' WHERE (`internalID` = '" + req.user.id + "')";
+            con.query(str);
+            res.redirect('/customerPage')
         }
-        
     })
 })
 
@@ -317,11 +396,40 @@ app.get('/customerPage', checkAuthenticated, (req, res) =>{
     res.render('customerPage');
 });
 
+app.post('/meetingHistory', (req, res) => {
+    con.query(`SELECT * from meetings where  member1 = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`, 
+    (err, rows) => {
+        if (err) throw err;
+        res.render('meetingHistory', {meetings: rows});
+    });
+})
+
+app.delete('/logout', (req, res) => {
+    req.logOut()
+    res.redirect('/adminLogin');
+});
+
 function checkAuthenticated(req, res, next){
     if (req.isAuthenticated()){
         return next();
     }
-    res.redirect('adminLogin')
+    res.redirect('/adminLogin')
+}
+
+function checkNotAuthenticated(req, res, next){
+    if (req.isAuthenticated()){
+        return res.redirect('/customerPage')
+    }
+    next()
+}
+
+function checkRole(role){
+    return ( req, res, next) => {
+        if (req.user.admin !== role){
+            return res.redirect('/adminLogin')
+        }
+        next()
+    }
 }
 
 app.listen(3000);

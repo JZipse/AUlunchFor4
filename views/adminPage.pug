@@ -15,14 +15,15 @@ html
                         li(class = "nav-item")
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
         h1 AU Lunch For 4
-        .container
-            .row
-                .col
-                    button(type="button" class="btn btn-primary" onclick="window.location.href='/form/delete'") Delete Prior User
-                .col
-                    button(type="button" class="btn btn-primary" onclick="window.location.href='/generateMeetings'") Make groups and send Emails
-                .col
-                    button(type="button" class="btn btn-primary" onclick="window.location.href='/reports'") Activity Report
-                .col
-                    button(type="button" class="btn btn-primary" onclick="window.location.href='/adminLogin'") Logout
+        form(method='post')
+            .container
+                .row
+                    .col
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/form/delete'") Delete Prior User
+                    .col
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/generateMeetings'") Make groups and send Emails
+                    .col
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/reports'") Activity Report
+                    .col
+                        button(type="submit" class="btn btn-primary" formaction="/logout?_method=DELETE") Logout
 
