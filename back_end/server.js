@@ -240,16 +240,6 @@ app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
     res.render('adminPage');
 })
 
-app.post('/adminLogin', (req, res) => {
-   //console.log('Got Body:', req.body);
-    const adminUser = "user";
-    const adminPass = "pass";
-    if (req.body.user == adminUser && req.body.pass == adminPass){
-        res.redirect('/adminPage');
-    }else{
-        res.send("Wrong Username or Passord for Admin");
-    }
-});
 
 app.post('/adminLogin', passport.authenticate('local', {
     successRedirect: '/adminPage',
@@ -310,7 +300,7 @@ app.get('/feedback', checkAuthenticated, (req, res) =>{
     var mID = "";
     var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = " + id + " "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " "+
             "OR member2 = "+ id + " " +
             "OR member3 = "+ id + " " +
             "OR member4 = "+ id + " " +
@@ -318,7 +308,7 @@ app.get('/feedback', checkAuthenticated, (req, res) =>{
         "UNION "+
         "SELECT meetingID from meetings RIGHT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = "+ id + " "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = "+ id + " "+
             "OR member2 = "+ id + " " +
             "OR member3 = "+ id + " " +
             "OR member4 = "+ id + " " +
@@ -349,7 +339,7 @@ app.post('/feedback/Insert', [
         var mID = "";
         var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = " + id + " "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " "+
             "OR member2 = "+ id + " " +
             "OR member3 = "+ id + " " +
             "OR member4 = "+ id + " " +
@@ -357,7 +347,7 @@ app.post('/feedback/Insert', [
         "UNION "+
         "SELECT meetingID from meetings RIGHT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = "+ id + " "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = "+ id + " "+
             "OR member2 = "+ id + " " +
             "OR member3 = "+ id + " " +
             "OR member4 = "+ id + " " +
@@ -421,7 +411,7 @@ app.get('/customerPage', checkAuthenticated, (req, res) =>{
 });
 
 app.post('/meetingHistory', (req, res) => {
-    con.query(`SELECT * from meetings where  member1 = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`,
+    con.query(`SELECT * from meetings where  meetingLeader = ${req.user.id} or member2 = ${req.user.id} or member3 = ${req.user.id} or member4 = ${req.user.id} or member5 = ${req.user.id};`,
         (err, rows) => {
             if (err) throw err;
             res.render('meetingHistory', { meetings: rows });
