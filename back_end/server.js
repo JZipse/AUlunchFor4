@@ -88,6 +88,7 @@ app.post('/update/password/action',[
                 console.log(str)
                 con.query(str)
                 res.redirect('/adminLogin')
+                //customers.length = 0;
             }else{
                 console.log(pass != null)
                 req.flash('noAccount', 'No Account has been made for that Email.')
@@ -170,7 +171,7 @@ app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
 });
 
 app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
-    res.render('adminLogin');
+    customers.length = 0;
     con.query('SELECT internalID, EMAIL, PASSWORD, ISADMIN FROM users', (err,rows) => {
         if(err) throw err;
         console.log('Data received from Db:');
@@ -179,6 +180,7 @@ app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
             customers.push(user); 
         }
     });
+    setTimeout(function(){res.render('adminLogin')}, 100);
 });
 
 app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
