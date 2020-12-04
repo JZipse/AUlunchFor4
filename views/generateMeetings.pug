@@ -14,15 +14,14 @@ html
                             a(class="nav-link" href="/adminPage") Home Admin
                         li(class = "nav-item")
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
-        h1 AU Lunch For 4
+        h1 List of Meetings
         .container
-            .row
+            .row   
                 .col
                     form(action='/newMeeting', method='post')
                         button(type='submit' class='btn btn-primary') Create New Meeting
-        h1 List of Meetings
-        .container
             .row 
+        
                 .col
                     table(style='width:100%', border='1', class="table center",)
                         tr 
