@@ -122,7 +122,7 @@ app.post('/formaction', [
         console.log('Got body:', req.body)
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `previousLeader`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '0', '1')";
+        var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '1')";
         console.log(str);
         con.query(str);
         res.redirect('/adminLogin')
