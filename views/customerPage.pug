@@ -16,22 +16,26 @@ html
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
         h1 Customer Page:
         form(method='post')
-        .container
-            .row
-                .col
-                    button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/update") Update My Account
-                .col
-                    button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/inactiveToggle") List Me As Inactive/Active
-                .col
-                    button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
-                .col
-                    button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/meetingHistory") View My Meeting History
-            .row
-                .col
-            .row
-                .col
-            .row
-                .col
-                    button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete My Account (does it need a confirmation page?)
-                .col
-                    button(type="submit" class="btn btn-primary" onclick="window.location.href='/logout'") Logout
+            .container
+                .row
+                    .col
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/customer/update'") Update My Account
+                    .col
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/inactiveToggle'") List Me As Inactive/Active
+                        if(messages.active)
+                            p #{messages.active}
+                        if(messages.inactive)
+                            p #{messages.inactive}
+                    .col
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
+                    .col
+                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/meetingHistory") View My Meeting History
+                .row
+                    .col
+                .row
+                    .col
+                .row
+                    .col
+                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete My Account (does it need a confirmation page?)
+                    .col
+                        button(type="submit" class="btn btn-primary" formaction="/logout?_method=DELETE") Logout

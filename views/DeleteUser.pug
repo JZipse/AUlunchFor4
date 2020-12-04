@@ -38,17 +38,17 @@ html
                                 td #{use.department}
                             
         form(method="post" action="/form/delete/action")
-        .container
-            .row
-                .col-2
-                    label Select User ID:
-            .row
-                .col
-                    select(name='ID', id='item')
-                        for use in users
-                            option(name="select" value=use.internalID ) #{use.schoolID}
-            .row
-                .col-2
-                    button(type="submit" class="btn btn-primary" formaction="/form/delete/action") Delete Selected User
-                .col-2
-                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
+            .container
+                .row
+                    .col-2
+                        label Select User ID:
+                .row
+                    .col
+                        select(name='ID', id='item')
+                            for use in users
+                                option(name="select" value=use.internalID ) #{use.schoolID}
+                .row
+                    .col-2
+                        button(type="submit" class="btn btn-primary" formaction="/form/delete/action") Delete Selected User
+                    .col-2
+                        button(type="button" class="btn btn-primary" onclick="history.back()") Back
