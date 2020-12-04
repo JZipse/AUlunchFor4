@@ -161,7 +161,7 @@ app.post('/newMeeting', async (req, res) => {
     con.query("SELECT count(*) AS count FROM lunch44F2020.users WHERE active = 1;", function (err, results1) {
         var remain = results1[0].count % 4;
         var loops;
-        if (count > 3) {
+        if (results1[0].count > 3) {
             if (results1[0].count == 6) {
                 loops = 3;
             } else {
@@ -189,14 +189,16 @@ app.post('/newMeeting', async (req, res) => {
                 }
                 console.log(meeting);
                 if (loops == 5) {
-                    con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`, `member5`, `meetingLeader`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "','" + meeting[4] + "','" + null + "' )");
+                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "','" + meeting[4] + "')");
                 } else if (loops == 4) {
-                    con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`, `member5`, `meetingLeader`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "','" + null + "','" + null + "' )");
+                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "','" + null + "' )");
                 } else {
-                    con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`, `member5`, `meetingLeader`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + null + "','" + null + "','" + null + "' )");
+                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + null + "','" + null + "' )");
                 }
 
             });
+            res.redirect('/generateMeetings')
+            res.end()
 
         } else {
             console.log("Not Enough Users For Meeting")
