@@ -17,6 +17,7 @@ initializePassport(
 );
 
 const customers = [];
+const meeting = [];
 
 const con = mysql.createConnection({
     host: "45.55.136.114",
@@ -97,18 +98,45 @@ app.get('/generateMeetings', (req, res) => {
 
 app.post('/newMeeting', async (req, res) => {
     var meeting = [];
-    con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT 4;", function (err, result, fields) {
-        if (err) throw err;
-        //console.log(result[0].internalID);
-        meeting.push(result[0].internalID);
-        meeting.push(result[1].internalID);
-        meeting.push(result[2].internalID);
-        meeting.push(result[3].internalID);
-        for (i = 0; i <= 3; i++) {
-            con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
+    var remain = 4 % 4
+    con.query("SELECT count(*) AS count FROM lunch44F2020.users", function (err, results) {
+        var remain = results[0].count % 4;
+        var loops;
+        if (results[0].count < 3) {
+            console.log("Not Enough Users For Meeting")
+        } else {
+            if (remain == 1) {
+                loops = 5;
+            } else if (remain == 2) {
+                loops = 4;
+            } else if (remain == 3) {
+                if (results[0].count > 3) {
+                    loops = 4;
+                } else {
+                    loops = 3;
+                }
+            } else {
+                loops = 4;
+            }
         }
-        con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "')");
-    });
+
+        console.log("Loop:" + loops);
+        console.log(remain);
+        console.log(results[0].count);
+    })
+    // con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT 4;", function (err, result, fields) {
+    //     if (err) throw err;
+    //console.log(result[0].internalID);
+    //     meeting.push(result[0].internalID);
+    //     meeting.push(result[1].internalID);
+    //     meeting.push(result[2].internalID);
+    //     meeting.push(result[3].internalID);
+    //     for (i = 0; i <= 3; i++) {
+    //         con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
+    //     }
+
+    //     con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "')");
+    // });
     res.redirect('/generateMeetings')
 });
 
