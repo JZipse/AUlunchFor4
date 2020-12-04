@@ -20,7 +20,7 @@ html
             form(action='/feedback/Insert', method='post')
                 .row
                     .col 
-                        label(for='feedback') Feedback:
+                        label(for='feedback') Feedback for meeting with ID: #{meetingID}
                 .row
                     .col
                         textarea(name="feedback" value="Please Provide Feedback")

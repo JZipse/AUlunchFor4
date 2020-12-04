@@ -165,7 +165,6 @@ app.get('/adminPage', checkAuthenticated, (req, res) => {
 
 app.post('/adminLogin', (req, res) => {
    //console.log('Got Body:', req.body);
- 
     const adminUser = "user";
     const adminPass = "pass";
     if (req.body.user == adminUser && req.body.pass == adminPass){
@@ -223,8 +222,30 @@ app.post('/customer/update/action',[
 })
 
 app.get('/feedback', checkAuthenticated, (req, res) =>{
-    res.render('feedback');
-});
+    var id = req.user.id;
+    var mID = "";
+    var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
+        "comments ON meetingID = comments.meetID "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = " + id + " "+
+            "OR member2 = "+ id + " " +
+            "OR member3 = "+ id + " " +
+            "OR member4 = "+ id + " " +
+            "OR member5 = "+ id + ")"+
+        "UNION "+
+        "SELECT meetingID from meetings RIGHT OUTER JOIN "+
+        "comments ON meetingID = comments.meetID "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = "+ id + " "+
+            "OR member2 = "+ id + " " +
+            "OR member3 = "+ id + " " +
+            "OR member4 = "+ id + " " +
+            "OR member5 = "+ id + ")", 
+            (err,rows)=>{
+                if(err) throw err;
+                console.log(rows[0].meetingID);
+                let dataV = {meetingID : rows[0].meetingID}
+                res.render('feedback', dataV);
+            });
+})
 
 app.post('/feedback/Insert',[
     body("feedback").notEmpty().withMessage("Feedback on your meeting would be very helpful.")
@@ -234,9 +255,30 @@ app.post('/feedback/Insert',[
         console.log("this is interesting: ", errors.array()[0])
         req.flash('err', errors.array()[0].msg)
         res.redirect('/feedback')
-    }else{
-        console.log('Got body:', req.user)
-        res.send("This forms functinality has yet to be implemented.")
+    }else{      
+        var id = req.user.id;
+        var mID = "";
+        var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
+        "comments ON meetingID = comments.meetID "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = " + id + " "+
+            "OR member2 = "+ id + " " +
+            "OR member3 = "+ id + " " +
+            "OR member4 = "+ id + " " +
+            "OR member5 = "+ id + ")"+
+        "UNION "+
+        "SELECT meetingID from meetings RIGHT OUTER JOIN "+
+        "comments ON meetingID = comments.meetID "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = "+ id + " "+
+            "OR member2 = "+ id + " " +
+            "OR member3 = "+ id + " " +
+            "OR member4 = "+ id + " " +
+            "OR member5 = "+ id + ")", (err,rows)=>{
+                if(err) throw err;
+                mID=(rows[0].meetingID).toString();
+                var str = "INSERT INTO `comments` (`meetID`, `memberID`, `comment`) VALUES ("+ mID+ "," + req.user.id + ",'" + req.body.feedback+"')";
+                con.query(str);
+                res.redirect('/customerPage')
+            });
     }
 });
 
