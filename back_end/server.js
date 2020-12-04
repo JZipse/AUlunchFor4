@@ -92,7 +92,7 @@ app.get('/reports', checkAuthenticated, (req, res) => {
     res.render('Reports')
 })
 
-app.get('/generateMeetings', (req, res) => {
+app.get('/generateMeetings', checkAuthenticated, (req, res) => {
     res.render('generateMeetings')
 });
 
@@ -155,7 +155,7 @@ app.get('/adminLogin', (req, res) => {
     });
 });
 
-app.get('/adminPage', (req, res) => {
+app.get('/adminPage', checkAuthenticated, (req, res) => {
     res.render('adminPage');
 
 });
