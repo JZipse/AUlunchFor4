@@ -168,7 +168,7 @@ app.get('/reports', checkAuthenticated, (req, res) => {
 })
 
 app.get('/generateMeetings', checkAuthenticated, (req, res) => {
-    con.query("SELECT * FROM meetings", function (err, rows, fields) {
+    con.query("SELECT DATE_FORMAT(meetDate, '%Y-%m-%d') AS meetDate, meetingID, meetingLeader, member2, member3, member4, member5  from meetings", function (err, rows, fields) {
         if (err) throw err
         res.render('generateMeetings', {
             title: 'Meetings',
