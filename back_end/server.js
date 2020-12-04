@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 const express = require('express');
@@ -14,12 +14,13 @@ const methodOverride = require('method-override')
 
 
 initializePassport(
-     passport, 
-     email => customers.find(user => user.email === email),
-     id => customers.find(user => user.id === id)
+    passport,
+    email => customers.find(user => user.email === email),
+    id => customers.find(user => user.id === id)
 );
 
 const customers = [];
+const meeting = [];
 
 const con = mysql.createConnection({
     host: "45.55.136.114",
@@ -28,7 +29,7 @@ const con = mysql.createConnection({
     database: "lunch44F2020"
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
@@ -38,7 +39,7 @@ app.set('view engine', 'pug');
 app.set('views', '../views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(flash())
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -130,14 +131,14 @@ app.post('/formaction', [
 })
 
 app.get('/form/delete', (req, res) => {
-    con.query('SELECT * FROM users', (err,rows) => {
-        if(err) throw err;
+    con.query('SELECT * FROM users', (err, rows) => {
+        if (err) throw err;
 
         console.log(rows.password);
         console.log('Data received from Db:');
         console.log(rows);
 
-        res.render('DeleteUser', {"users": rows});
+        res.render('DeleteUser', { "users": rows });
     });
 })
 
@@ -161,13 +162,55 @@ app.post('/form/delete/action',[
     }
 })
 
-app.get('/reports', checkAuthenticated, (req,res) => {
+app.get('/reports', checkAuthenticated, (req, res) => {
     res.render('Reports')
 })
 
-app.get('/GenerateMeetings', checkAuthenticated, (req, res) => {
-    console.log('Got body:', req.body)
-    res.send('Generate Meetings Page')
+app.get('/generateMeetings', checkAuthenticated, (req, res) => {
+    res.render('generateMeetings')
+});
+
+app.post('/newMeeting', async (req, res) => {
+    var meeting = [];
+    con.query("SELECT count(*) AS count FROM lunch44F2020.users", function (err, results) {
+        var remain = results[0].count % 4;
+        var loops;
+        if (results[0].count < 3) {
+            console.log("Not Enough Users For Meeting")
+        } else {
+            if (remain == 1) {
+                loops = 5;
+            } else if (remain == 2) {
+                loops = 4;
+            } else if (remain == 3) {
+                if (results[0].count > 3) {
+                    loops = 4;
+                } else {
+                    loops = 3;
+                }
+            } else {
+                loops = 4;
+            }
+        }
+
+        console.log("Loop:" + loops);
+        console.log(remain);
+        console.log(results[0].count);
+    })
+    // con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT 4;", function (err, result, fields) {
+    //     if (err) throw err;
+    //console.log(result[0].internalID);
+    //     meeting.push(result[0].internalID);
+    //     meeting.push(result[1].internalID);
+    //     meeting.push(result[2].internalID);
+    //     meeting.push(result[3].internalID);
+    //     for (i = 0; i <= 3; i++) {
+    //         con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
+    //     }
+
+    //     con.query("INSERT INTO `meetings`(`meetDate`, `member1`, `member2`, `member3`, `member4`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "')");
+    // });
+    res.redirect('/generateMeetings')
 });
 
 app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
@@ -185,7 +228,7 @@ app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
 
 app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
     res.render('adminPage');
-    
+
 });
 
 app.post('/adminLogin', passport.authenticate('local', {
@@ -242,7 +285,7 @@ app.post('/customer/update/action',[
     }
 })
 
-app.get('/feedback', checkAuthenticated, (req, res) =>{
+app.get('/feedback', checkAuthenticated, (req, res) => {
     res.render('feedback');
 });
 
