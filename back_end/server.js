@@ -12,6 +12,16 @@ const initializePassport = require('./passport-config');
 const { body, validationResult } = require('express-validator');
 const methodOverride = require('method-override');
 const { Console } = require('console');
+const nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'aulffour@gmail.com',
+      pass: 'Aulforfour4'
+    }
+  });
+
 
 
 initializePassport(
@@ -182,55 +192,7 @@ app.get('/generateMeetings', checkAuthenticated, (req, res) => {
 });
 
 app.post('/newMeeting', async (req, res) => {
-    var meeting = [];
-    con.query("SELECT count(*) AS count FROM lunch44F2020.users WHERE active = 1;", function (err, results1) {
-        var remain = results1[0].count % 4;
-        var loops;
-        if (results1[0].count > 3) {
-            if (results1[0].count == 6) {
-                loops = 3;
-            } else {
-                if (remain == 1) {
-                    loops = 5;
-                } else if (remain == 2) {
-                    loops = 4;
-                } else if (remain == 3) {
-                    if (results1[0].count > 3) {
-                        loops = 4;
-                    } else {
-                        loops = 3;
-                    }
-                } else {
-                    loops = 4;
-                }
-            }
-
-            con.query("SELECT internalID FROM users WHERE active = 1 ORDER BY RAND() LIMIT " + loops + ";", function (err, result, fields) {
-                if (err) throw err;
-                for (i = 0; i < loops; i++) {
-                    console.log(result[i].internalID);
-                    meeting.push(result[i].internalID);
-                    con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
-                }
-                console.log(meeting);
-                if (loops == 5) {
-                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "','" + meeting[4] + "')");
-                } else if (loops == 4) {
-                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + meeting[3] + "','" + null + "' )");
-                } else {
-                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0] + "', '" + meeting[1] + "', '" + meeting[2] + "', '" + null + "','" + null + "' )");
-                }
-
-            });
-            res.redirect('/generateMeetings')
-            res.end()
-
-        } else {
-            console.log("Not Enough Users For Meeting")
-            res.redirect('/generateMeetings')
-            res.end()
-        }
-    });
+   generateMeeting(res,req)
 });
 
 app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
@@ -470,6 +432,84 @@ function checkRole(role) {
         }
         next()
     }
+}
+
+function generateMeeting(res, req){
+    var meeting = [];
+    con.query("SELECT count(*) AS count FROM lunch44F2020.users WHERE active = 1;", function (err, results1) {
+        var remain = results1[0].count % 4;
+        var loops;
+        if (results1[0].count > 3) {
+            if (results1[0].count == 6) {
+                loops = 3;
+            } else {
+                if (remain == 1) {
+                    loops = 5;
+                } else if (remain == 2) {
+                    loops = 4;
+                } else if (remain == 3) {
+                    if (results1[0].count > 3) {
+                        loops = 4;
+                    } else {
+                        loops = 3;
+                    }
+                } else {
+                    loops = 4;
+                }
+            }
+
+            con.query("SELECT internalID, firstName, lastName, email FROM users WHERE active = 1 ORDER BY RAND() LIMIT " + loops + ";", function (err, result, fields) {
+                if (err) throw err;
+                for (i = 0; i < loops; i++) {
+                    console.log(result[i].internalID);
+                    meeting.push(result[i]);
+                    con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
+                }
+                console.log(meeting);
+                if (loops == 5) {
+                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0].internalID + "', '" + meeting[1].internalID + "', '" + meeting[2].internalID + "', '" + meeting[3].internalID + "','" + meeting[4].internalID + "')");
+                    var mailOptions = {
+                        from: 'AULFFOUR@gmail.com',
+                        to: `${meeting[0].email},${meeting[1].email},${meeting[2].email},${meeting[3].email},${meeting[4].email}`,
+                        subject: 'Your scheduled AUL44 Meeting.',
+                        text: `Meeting Leader: ${meeting[0].firstName}  ${meeting[0].lastName} \nMember2: ${meeting[1].firstName} ${meeting[1].lastName} \nMember 3: ${meeting[2].firstName} ${meeting[2].lastName} \nMember 4: ${meeting[3].firstName} ${meeting[3].lastName} \nMember 5: ${meeting[4].firstName} ${meeting[4].lastName}`
+                      };
+                } else if (loops == 4) {
+                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0].internalID + "', '" + meeting[1].internalID + "', '" + meeting[2].internalID + "', '" + meeting[3].internalID + "','" + null + "' )");
+                    var mailOptions = {
+                        from: 'AULFFOUR@gmail.com',
+                        to: `${meeting[0].email},${meeting[1].email},${meeting[2].email},${meeting[3].email}`,
+                        subject: 'Your scheduled AUL44 Meeting.',
+                        text: `Meeting Leader: ${meeting[0].firstName}  ${meeting[0].lastName} \nMember2: ${meeting[1].firstName} ${meeting[1].lastName} \nMember 3: ${meeting[2].firstName} ${meeting[2].lastName} \nMember 4: ${meeting[3].firstName} ${meeting[3].lastName}`
+                      };
+                } else {
+                    con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0].internalID + "', '" + meeting[1].internalID + "', '" + meeting[2].internalID + "', '" + null + "','" + null + "' )");
+                    var mailOptions = {
+                        from: 'AULFFOUR@gmail.com',
+                        to: `${meeting[0].email},${meeting[1].email},${meeting[2].email}`,
+                        subject: 'Your scheduled AUL44 Meeting.',
+                        text: `Meeting Leader: ${meeting[0].firstName}  ${meeting[0].lastName} \nMember2: ${meeting[1].firstName} ${meeting[1].lastName} \nMember 3: ${meeting[2].firstName} ${meeting[2].lastName}`
+                      };
+                }
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      console.log(error);
+                    } else {
+                      console.log('Email sent: ' + info.response);
+                    }
+                  });
+
+            });
+            res.redirect('/generateMeetings')
+            res.end()
+
+        } else {
+            console.log("Not Enough Users For Meeting")
+            res.redirect('/generateMeetings')
+            res.end()
+        }
+       
+    });
 }
 
 app.listen(3000);
