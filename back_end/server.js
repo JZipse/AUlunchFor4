@@ -463,7 +463,6 @@ function generateMeeting() {
             con.query("SELECT internalID, firstName, lastName, email FROM users WHERE active = 1 ORDER BY RAND() LIMIT " + loops + ";", function (err, result, fields) {
                 if (err) throw err;
                 for (i = 0; i < loops; i++) {
-                    //console.log(result[i].internalID);
                     meeting.push(result[i]);
                     con.query("UPDATE users SET active = 0 WHERE (`internalID` = '" + result[i].internalID + "')");
                 }
@@ -505,14 +504,12 @@ function generateMeeting() {
 
         } else {
             console.log("Not Enough Users For Meeting")
-            //res.redirect('/adminPage')
-            //res.end()
         }
 
     });
 }
 
-cron.schedule('* * * */1 */ *', function(){
+cron.schedule('0 0 12 1 *', function(){
     generateMeeting()
 })
 
