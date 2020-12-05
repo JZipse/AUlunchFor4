@@ -17,10 +17,10 @@ const nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'aulffour@gmail.com',
-      pass: 'Aulforfour4'
+        user: 'aulffour@gmail.com',
+        pass: 'Aulforfour4'
     }
-  });
+});
 
 
 
@@ -177,8 +177,8 @@ app.post('/form/delete/action', [
 
 
 app.post('/reports', checkAuthenticated, (req, res) => {
-    
-    res.render('reports', {"gnumMeetings" : gnumMeetings, "bnumMeetings": bnumMeetings});
+
+    res.render('reports', { "gnumMeetings": gnumMeetings, "bnumMeetings": bnumMeetings });
 })
 
 app.get('/generateMeetings', checkAuthenticated, (req, res) => {
@@ -192,7 +192,7 @@ app.get('/generateMeetings', checkAuthenticated, (req, res) => {
 });
 
 app.post('/newMeeting', async (req, res) => {
-   generateMeeting(res,req)
+    generateMeeting(res, req)
 });
 
 app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
@@ -210,13 +210,13 @@ app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
 
 app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
     let gMeetings = "SELECT COUNT(meetDate) AS count from meetings where meetDate != '0000-00-00'"
-        con.query(gMeetings, function(err, res) {
+    con.query(gMeetings, function (err, res) {
         if (err) throw err
         gnumMeetings = res[0].count;
         console.log(gnumMeetings);
     });
     let bMeetings = "SELECT COUNT(meetDate) AS count from meetings where meetDate = '0000-00-00'"
-        con.query(bMeetings, function(err, res) {
+    con.query(bMeetings, function (err, res) {
         if (err) throw err
         bnumMeetings = res[0].count;
         console.log(bnumMeetings);
@@ -322,24 +322,24 @@ app.post('/feedback/Insert', [
         var id = req.user.id;
         let meetDate = req.body.meetDate
         var mID = "";
-        var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
-        "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")"+
-        "UNION "+
-        "SELECT meetingID from meetings RIGHT OUTER JOIN "+
-        "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = "+ id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")", (err,rows)=>{
-                if(err) throw err;
-                mID=(rows[0].meetingID).toString();
-                var str = "INSERT INTO `comments` (`meetID`, `memberID`, `comment`) VALUES ("+ mID+ "," + req.user.id + ",'" + req.body.feedback+"')";
+        var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN " +
+            "comments ON meetingID = comments.meetID " +
+            "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " " +
+            "OR member2 = " + id + " " +
+            "OR member3 = " + id + " " +
+            "OR member4 = " + id + " " +
+            "OR member5 = " + id + ")" +
+            "UNION " +
+            "SELECT meetingID from meetings RIGHT OUTER JOIN " +
+            "comments ON meetingID = comments.meetID " +
+            "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " " +
+            "OR member2 = " + id + " " +
+            "OR member3 = " + id + " " +
+            "OR member4 = " + id + " " +
+            "OR member5 = " + id + ")", (err, rows) => {
+                if (err) throw err;
+                mID = (rows[0].meetingID).toString();
+                var str = "INSERT INTO `comments` (`meetID`, `memberID`, `comment`) VALUES (" + mID + "," + req.user.id + ",'" + req.body.feedback + "')";
                 //console.log("Got Date" + req.body.meetDate);
                 var updateMeet = "UPDATE meetings SET meetDate = ' " + meetDate + " ' where (`meetingID` = " + mID + ")"
                 con.query(str);
@@ -381,21 +381,21 @@ app.get('/inactiveToggle', (req, res) => {
 
 app.get('/customerPage', checkAuthenticated, (req, res) => {
     con.query("SELECT meetingLeader from meetings WHERE meetingLeader = "
-    + req.user.id + " AND meetDate = '0000-00-00'",
-    (err,rows)=>{
-    if(err) throw err;
-    console.log(rows);
-    if(rows.length == 0){
-        console.log("R1");
-        let dataV = {leader : 0}
-        res.render('customerPage', dataV);    
-    }
-    else{
-        console.log("R2");
-        let dataV = {leader : 1}
-        res.render('customerPage', dataV);
-    }
-    });
+        + req.user.id + " AND meetDate = '0000-00-00'",
+        (err, rows) => {
+            if (err) throw err;
+            console.log(rows);
+            if (rows.length == 0) {
+                console.log("R1");
+                let dataV = { leader: 0 }
+                res.render('customerPage', dataV);
+            }
+            else {
+                console.log("R2");
+                let dataV = { leader: 1 }
+                res.render('customerPage', dataV);
+            }
+        });
 });
 
 app.post('/meetingHistory', (req, res) => {
@@ -434,7 +434,7 @@ function checkRole(role) {
     }
 }
 
-function generateMeeting(res, req){
+function generateMeeting(res, req) {
     var meeting = [];
     con.query("SELECT count(*) AS count FROM lunch44F2020.users WHERE active = 1;", function (err, results1) {
         var remain = results1[0].count % 4;
@@ -473,7 +473,7 @@ function generateMeeting(res, req){
                         to: `${meeting[0].email},${meeting[1].email},${meeting[2].email},${meeting[3].email},${meeting[4].email}`,
                         subject: 'Your scheduled AUL44 Meeting.',
                         text: `Meeting Leader: ${meeting[0].firstName}  ${meeting[0].lastName} \nMember2: ${meeting[1].firstName} ${meeting[1].lastName} \nMember 3: ${meeting[2].firstName} ${meeting[2].lastName} \nMember 4: ${meeting[3].firstName} ${meeting[3].lastName} \nMember 5: ${meeting[4].firstName} ${meeting[4].lastName}`
-                      };
+                    };
                 } else if (loops == 4) {
                     con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0].internalID + "', '" + meeting[1].internalID + "', '" + meeting[2].internalID + "', '" + meeting[3].internalID + "','" + null + "' )");
                     var mailOptions = {
@@ -481,7 +481,7 @@ function generateMeeting(res, req){
                         to: `${meeting[0].email},${meeting[1].email},${meeting[2].email},${meeting[3].email}`,
                         subject: 'Your scheduled AUL44 Meeting.',
                         text: `Meeting Leader: ${meeting[0].firstName}  ${meeting[0].lastName} \nMember2: ${meeting[1].firstName} ${meeting[1].lastName} \nMember 3: ${meeting[2].firstName} ${meeting[2].lastName} \nMember 4: ${meeting[3].firstName} ${meeting[3].lastName}`
-                      };
+                    };
                 } else {
                     con.query("INSERT INTO `meetings`(`meetDate`, `meetingLeader`, `member2`, `member3`, `member4`, `member5`) VALUES('" + null + "', '" + meeting[0].internalID + "', '" + meeting[1].internalID + "', '" + meeting[2].internalID + "', '" + null + "','" + null + "' )");
                     var mailOptions = {
@@ -489,26 +489,24 @@ function generateMeeting(res, req){
                         to: `${meeting[0].email},${meeting[1].email},${meeting[2].email}`,
                         subject: 'Your scheduled AUL44 Meeting.',
                         text: `Meeting Leader: ${meeting[0].firstName}  ${meeting[0].lastName} \nMember2: ${meeting[1].firstName} ${meeting[1].lastName} \nMember 3: ${meeting[2].firstName} ${meeting[2].lastName}`
-                      };
+                    };
                 }
-                transporter.sendMail(mailOptions, function(error, info){
+                transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
-                      console.log(error);
+                        console.log(error);
                     } else {
-                      console.log('Email sent: ' + info.response);
+                        console.log('Email sent: ' + info.response);
                     }
-                  });
-
+                });
+                generateMeeting(res, req);
             });
-            res.redirect('/generateMeetings')
-            res.end()
 
         } else {
             console.log("Not Enough Users For Meeting")
-            res.redirect('/generateMeetings')
+            res.redirect('/adminPage')
             res.end()
         }
-       
+
     });
 }
 
