@@ -22,6 +22,8 @@ initializePassport(
 
 const customers = [];
 const meeting = [];
+var gnumMeetings = 0;
+var bnumMeetings = 0;
 
 const con = mysql.createConnection({
     host: "45.55.136.114",
@@ -163,8 +165,10 @@ app.post('/form/delete/action', [
     }
 })
 
-app.get('/reports', checkAuthenticated, (req, res) => {
-    res.render('Reports')
+
+app.post('/reports', checkAuthenticated, (req, res) => {
+    
+    res.render('reports', {"gnumMeetings" : gnumMeetings, "bnumMeetings": bnumMeetings});
 })
 
 app.get('/generateMeetings', checkAuthenticated, (req, res) => {
@@ -243,6 +247,18 @@ app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
 });
 
 app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
+    let gMeetings = "SELECT COUNT(meetDate) AS count from meetings where meetDate != '0000-00-00'"
+        con.query(gMeetings, function(err, res) {
+        if (err) throw err
+        gnumMeetings = res[0].count;
+        console.log(gnumMeetings);
+    });
+    let bMeetings = "SELECT COUNT(meetDate) AS count from meetings where meetDate = '0000-00-00'"
+        con.query(bMeetings, function(err, res) {
+        if (err) throw err
+        bnumMeetings = res[0].count;
+        console.log(bnumMeetings);
+    });
     res.render('adminPage');
 })
 
