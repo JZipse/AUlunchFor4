@@ -307,19 +307,11 @@ app.get('/feedback', checkAuthenticated, (req, res) =>{
     var mID = "";
     var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = " + id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")"+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + ") " +
         "UNION "+
         "SELECT meetingID from meetings RIGHT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = "+ id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")", 
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + ")", 
             (err,rows)=>{
                 if(err) throw err;
                 if(rows.length == 0){
@@ -346,23 +338,20 @@ app.post('/feedback/Insert',[
         var mID = "";
         var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = " + id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")"+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + ") "+
         "UNION "+
         "SELECT meetingID from meetings RIGHT OUTER JOIN "+
         "comments ON meetingID = comments.meetID "+
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (member1 = "+ id + " "+
-            "OR member2 = "+ id + " " +
-            "OR member3 = "+ id + " " +
-            "OR member4 = "+ id + " " +
-            "OR member5 = "+ id + ")", (err,rows)=>{
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " )", (err,rows)=>{
                 if(err) throw err;
                 mID=(rows[0].meetingID).toString();
+                //Submits comment
                 var str = "INSERT INTO `comments` (`meetID`, `memberID`, `comment`) VALUES ("+ mID+ "," + req.user.id + ",'" + req.body.feedback+"')";
                 con.query(str);
+                //Sets meeting date in table
+                var meetStr = "UPDATE meetings SET meetDate= '" + req.body.datePick + "' WHERE meetingID = " + mID + ";";
+                console.log(meetStr);
+                con.query(meetStr);
                 res.redirect('/customerPage')
             });
     }
@@ -398,23 +387,21 @@ app.get('/inactiveToggle', (req, res) =>{
     })
 })
 
-app.get('/customerPage', checkAuthenticated, (req, res) =>{
+app.get('/customerPage', checkAuthenticated, (req, res) => {
     con.query("SELECT meetingLeader from meetings WHERE meetingLeader = "
-    + req.user.id + " AND meetDate = '0000-00-00'",
-    (err,rows)=>{
-    if(err) throw err;
-    console.log(rows);
-    if(rows.length == 0){
-        console.log("R1");
-        let dataV = {leader : 0}
-        res.render('customerPage',dataV);    
-    }
-    else{
-        console.log("R2");
-        let dataV = {leader : 1}
-        res.render('customerPage', dataV);
-    }
-    });
+        + req.user.id + " AND meetDate = '0000-00-00'",
+        (err, rows) => {
+            if (err) throw err;
+            console.log(rows);
+            if (rows.length == 0) {
+                let dataV = { leader: false }
+                res.render('customerPage', dataV);
+            }
+            else {
+                let dataV = { leader: true }
+                res.render('customerPage', dataV);
+            }
+        });
 });
 
 app.post('/meetingHistory', (req, res) => {

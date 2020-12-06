@@ -23,6 +23,9 @@ html
                         label(for='feedback') Feedback for meeting with ID: #{meetingID}
                 .row
                     .col
+                        input(type = "date" name="datePick")
+                .row
+                    .col
                         textarea(name="feedback" value="Please Provide Feedback")
                     .col
                         if(messages.err)
