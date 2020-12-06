@@ -350,7 +350,6 @@ app.post('/feedback/Insert',[
                 con.query(str);
                 //Sets meeting date in table
                 var meetStr = "UPDATE meetings SET meetDate= '" + req.body.datePick + "' WHERE meetingID = " + mID + ";";
-                console.log(meetStr);
                 con.query(meetStr);
                 res.redirect('/customerPage')
             });
