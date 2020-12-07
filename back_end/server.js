@@ -65,7 +65,7 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 
 
-// forgot password functionalsity.
+// forgot password functionality.
 app.get('/update/password', (req, res) => {
     res.render('PasswordUpdate')
 })
@@ -233,6 +233,9 @@ app.post('/adminLogin', passport.authenticate('local', {
     failureFlash: true
 }));
 
+
+
+
 // Customer functionality begins here.
 app.post('/customerLogin', passport.authenticate('local', {
     successRedirect: '/customerPage',
@@ -313,12 +316,15 @@ app.get('/feedback', checkAuthenticated, (req, res) => {
 })
 
 app.post('/feedback/Insert', [
-    body("feedback").notEmpty().withMessage("Feedback on your meeting would be very helpful.")
+    body("feedback").notEmpty().withMessage("Feedback on your meeting would be very helpful."),
+    body("meetDate").notEmpty().isDate("Please confrim your meeting Date.")
 ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log("this is interesting: ", errors.array()[0])
-        req.flash('err', errors.array()[0].msg)
+        for (let i = 0; i < errors.array().length; i++) {
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
         res.redirect('/feedback')
     } else {
         var id = req.user.id;

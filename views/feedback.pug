@@ -22,7 +22,8 @@ html
                     .col 
                         label(for='feedback') Feedback for meeting with ID: #{meetingID} 
                     .col
-                        
+                        if(messages.feedback)
+                            p #{messages.feedback}
                     .col
                         label(for='meetDate') What day did the meeting happen:
                         
@@ -30,8 +31,8 @@ html
                     .col
                         textarea(name="feedback" value="Please Provide Feedback")
                     .col
-                        if(messages.err)
-                            p #{messages.err}
+                        if(messages.meetDate)
+                            p #{messages.meetDate}
                     .col
                         input(type="date" name="meetDate")
                 .row
