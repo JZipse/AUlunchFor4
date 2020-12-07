@@ -287,29 +287,21 @@ app.post('/customer/update/action', [
 app.get('/feedback', checkAuthenticated, (req, res) => {
     var id = req.user.id;
     var mID = "";
-    var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN " +
-        "comments ON meetingID = comments.meetID " +
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " " +
-        "OR member2 = " + id + " " +
-        "OR member3 = " + id + " " +
-        "OR member4 = " + id + " " +
-        "OR member5 = " + id + ")" +
-        "UNION " +
-        "SELECT meetingID from meetings RIGHT OUTER JOIN " +
-        "comments ON meetingID = comments.meetID " +
-        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + " " +
-        "OR member2 = " + id + " " +
-        "OR member3 = " + id + " " +
-        "OR member4 = " + id + " " +
-        "OR member5 = " + id + ")",
-        (err, rows) => {
-            if (err) throw err;
-            if (rows.length == 0) {
-                console.log("No meetings to comment on...");
-                res.redirect("/customerPage");
-            }
-            else {
-                let dataV = { meetingID: rows[0].meetingID }
+    var meetingID = con.query("SELECT meetingID from meetings LEFT OUTER JOIN "+
+        "comments ON meetingID = comments.meetID "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + ") " +
+        "UNION "+
+        "SELECT meetingID from meetings RIGHT OUTER JOIN "+
+        "comments ON meetingID = comments.meetID "+
+        "WHERE (meetingID IS NULL OR comments.meetID IS NULL) AND (meetingLeader = " + id + ")", 
+            (err,rows)=>{
+                if(err) throw err;
+                if(rows.length == 0){
+                    console.log("No meetings to comment on...");
+                    res.redirect("/customerPage");
+                }
+                else{
+                let dataV = {meetingID : rows[0].meetingID}
                 res.render('feedback', dataV);
             }
         });
@@ -394,13 +386,11 @@ app.get('/customerPage', checkAuthenticated, (req, res) => {
             if (err) throw err;
             console.log(rows);
             if (rows.length == 0) {
-                console.log("R1");
-                let dataV = { leader: 0 }
+                let dataV = { leader: false }
                 res.render('customerPage', dataV);
             }
             else {
-                console.log("R2");
-                let dataV = { leader: 1 }
+                let dataV = { leader: true }
                 res.render('customerPage', dataV);
             }
         });

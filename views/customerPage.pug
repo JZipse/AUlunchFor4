@@ -1,10 +1,10 @@
+- var leaderCheck={leader};
 html
     head
         title Customer Page
         link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
         style   
             include ../CSS/style2.css
-            var leaderCheck = #{leader};
     body
     div
         nav(class="navbar navbar-expand navbar-light bg-light")
@@ -16,7 +16,6 @@ html
                         li(class = "nav-item")
                             a(class="nav-link" href="https://aurora.edu/") Aurora University
         h1 Customer Page:
-        
         form(method='post')
             .container
                 .row
@@ -29,8 +28,8 @@ html
                         if(messages.inactive)
                             p #{messages.inactive}
                     .col
-                        if leaderCheck = 1
-                            button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback
+                        if leaderCheck.leader==true
+                            button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
                     .col
                         button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/meetingHistory") Meeting History
                 .row
