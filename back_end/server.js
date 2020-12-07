@@ -102,7 +102,7 @@ app.post('/update/password/action', [
                 let str = "UPDATE `users` SET password = '" + hashedPassword + "' where `email` = '" + req.body.email + "'";
                 console.log(str)
                 con.query(str)
-                res.redirect('/adminLogin')
+                res.redirect('/Login')
                 //customers.length = 0;
             } else {
                 console.log(pass != null)
@@ -140,7 +140,7 @@ app.post('/formaction', [
         var str = "INSERT INTO `users` (`firstName`, `lastName`, `schoolID`, `email`, `password`, `staffRole`, `department`, `active`) VALUES ('" + req.body.fName + "', '" + req.body.lName + "', '" + req.body.ID + "', '" + req.body.Email + "', '" + hashedPassword + "', '" + req.body.Role + "', '" + req.body.Dept + "', '1')";
         console.log(str);
         con.query(str);
-        res.redirect('/adminLogin')
+        res.redirect('/Login')
     }
 })
 
@@ -197,7 +197,7 @@ app.post('/newMeeting', async (req, res) => {
     res.redirect('/generateMeetings')
 });
 
-app.get('/adminLogin', checkNotAuthenticated, (req, res) => {
+app.get('/Login', checkNotAuthenticated, (req, res) => {
     customers.length = 0;
     con.query('SELECT internalID, EMAIL, PASSWORD, ISADMIN FROM users', (err, rows) => {
         if (err) throw err;
@@ -229,14 +229,14 @@ app.get('/adminPage', checkAuthenticated, checkRole(1), (req, res) => {
 
 app.post('/adminLogin', passport.authenticate('local', {
     successRedirect: '/adminPage',
-    failureRedirect: '/adminLogin',
+    failureRedirect: '/Login',
     failureFlash: true
 }));
 
 // Customer functionality begins here.
 app.post('/customerLogin', passport.authenticate('local', {
     successRedirect: '/customerPage',
-    failureRedirect: '/adminLogin',
+    failureRedirect: '/Login',
     failureFlash: true
 }));
 
@@ -410,14 +410,14 @@ app.post('/meetingHistory', (req, res) => {
 
 app.delete('/logout', (req, res) => {
     req.logOut()
-    res.redirect('/adminLogin');
+    res.redirect('/Login');
 });
 
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/adminLogin')
+    res.redirect('/Login')
 }
 
 function checkNotAuthenticated(req, res, next) {
@@ -430,7 +430,7 @@ function checkNotAuthenticated(req, res, next) {
 function checkRole(role) {
     return (req, res, next) => {
         if (req.user.admin !== role) {
-            return res.redirect('/adminLogin')
+            return res.redirect('/Login')
         }
         next()
     }

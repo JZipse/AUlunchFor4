@@ -21,24 +21,24 @@ html
             .container
                 .row
                     .col
-                        button(type="button" class="btn btn-primary" onclick="window.location.href='/customer/update'") Update My Account
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/customer/update'") Update Account
                     .col
-                        button(type="button" class="btn btn-primary" onclick="window.location.href='/inactiveToggle'") List Me As Inactive/Active
+                        button(type="button" class="btn btn-primary" onclick="window.location.href='/inactiveToggle'") Inactive/Active
                         if(messages.active)
                             p #{messages.active}
                         if(messages.inactive)
                             p #{messages.inactive}
                     .col
                         if leaderCheck = 1
-                            button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback for Last Meeting
+                            button(type="button" class="btn btn-primary" onclick="window.location.href='/feedback'") Post Feedback
                     .col
-                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/meetingHistory") View My Meeting History
+                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/meetingHistory") Meeting History
                 .row
                     .col
                 .row
                     .col
                 .row
                     .col
-                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete My Account (does it need a confirmation page?)
+                        button(name='ID' type="submit" class="btn btn-primary" value=ID formaction="/customer/delete") Delete Account
                     .col
                         button(type="submit" class="btn btn-primary" formaction="/logout?_method=DELETE") Logout
